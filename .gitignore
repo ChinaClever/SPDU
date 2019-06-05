@@ -37,3 +37,5 @@
 *.zip
 *.uvprojx
 *.uvprojx
+SPDU/bsp/stm32/stm32f407-atk-explorer/project.uvprojx
+SPDU/bsp/stm32/stm32f407-atk-explorer/project.uvprojx
