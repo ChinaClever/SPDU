@@ -60,10 +60,8 @@ int btn_task(void *arg)
 	}
 }
 
-void btn_thread_pool(void)
+void btn_thread(void)
 {
-	thread_pool pool;
-
-	init_thread_pool(&pool, "btn", 1, 128);
-	pool.add_task(&pool, btn_task, NULL);
+	rt_thread_t tid = rt_thread_create("btn",btn_task, NULL, 512, 22, 5);
+	if (tid != RT_NULL) rt_thread_startup(tid);
 }

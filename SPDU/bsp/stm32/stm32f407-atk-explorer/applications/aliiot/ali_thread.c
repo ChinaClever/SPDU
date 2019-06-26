@@ -40,11 +40,12 @@ void ali_pub_task(void *arg)
 	}
 }
 
-void ali_thread_pool(void)
+void ali_thread(void)
 {
-	thread_pool pool;
+	rt_thread_t tid = rt_thread_create("ali_main",ali_main_task, NULL,1*512,19, 5);
+	if (tid != RT_NULL) rt_thread_startup(tid);
 
-	init_thread_pool(&pool, "ali", 2, 3*1024);
-	pool.add_task(&pool, ali_main_task, NULL);
-	pool.add_task(&pool, ali_pub_task, NULL);
+	tid = rt_thread_create("ali_pub",ali_pub_task, NULL,3*512,18, 5);
+	if (tid != RT_NULL) rt_thread_startup(tid);
 }
+

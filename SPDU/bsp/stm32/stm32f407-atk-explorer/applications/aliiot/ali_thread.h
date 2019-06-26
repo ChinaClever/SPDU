@@ -9,7 +9,7 @@
 #define BSP_STM32_STM32F407_ATK_EXPLORER_APPLICATIONS_ALIIOT_ALI_THREAD_H_
 #include "ali_iot.h"
 
+void ali_thread(void);
 
-void ali_thread_pool(void);
 
 #endif /* BSP_STM32_STM32F407_ATK_EXPLORER_APPLICATIONS_ALIIOT_ALI_THREAD_H_ */
