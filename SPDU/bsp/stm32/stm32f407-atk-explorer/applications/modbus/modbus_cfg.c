@@ -28,5 +28,13 @@ struct sMdCfg *md_get_cfg(void)
 }
 
 
+void md_set_cfg(struct sMdCfg *t)
+{
+	struct sMdCfg *md = &gMdCfg;
+	md->en = t->en;
+	md->port = t->port;
+	md->addr = t->addr;
+	md->baud = t->baud;
 
+}
 

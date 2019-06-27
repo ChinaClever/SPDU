@@ -18,5 +18,6 @@ struct sMdCfg{
 };
 
 struct sMdCfg *md_get_cfg(void);
+void md_set_cfg(struct sMdCfg *t);
 
 #endif /* BSP_STM32_STM32F407_ATK_EXPLORER_APPLICATIONS_MODBUS_MODBUS_CFG_H_ */
