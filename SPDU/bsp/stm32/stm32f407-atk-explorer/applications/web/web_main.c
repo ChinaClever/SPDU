@@ -43,7 +43,9 @@ void web_main(void)
 	web_output_sw();
 	web_timer_sw();
 	web_seq_timer();
+
 	web_modbus();
+	web_network();
 
 	webnet_init();
 }

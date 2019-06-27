@@ -1,0 +1,201 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>network</title>
+
+<script type="text/javascript" src="ajax.js"></script>
+<script type="text/javascript">
+
+// 定时模式改变时，设定输入框的类型
+function selOnchange(v)
+{	
+	var obj = document.getElementById('port');
+	if(Number(v) > 0) {
+		obj.disabled = false;
+	} else {
+		obj.disabled = 'disabled';
+	}
+	
+	obj = document.getElementById('url');	
+	if(Number(v) > 0) {
+		obj.disabled = false;
+	} else {
+		obj.disabled = 'disabled';
+	}
+	
+	obj = document.getElementById('mdelay');
+	if(Number(v) > 0) {
+		obj.disabled = false;
+	} else {
+		obj.disabled = 'disabled';
+	}
+	
+	obj = document.getElementById('path');
+	if(3 == Number(v)) {
+		obj.disabled = false;
+	} else {
+		obj.disabled = 'disabled';
+	}
+}
+
+// 以对像来设置数据 
+function setByObj(obj)
+{
+	var en = obj["en"];
+	selOnchange(en);
+	
+	var e = document.getElementById('url');
+	e.value = obj["url"];
+	
+	e = document.getElementById('port');
+	e.value = obj["port"];
+	
+	e = document.getElementById('path');
+	e.value = obj["path"];	
+	
+	e = document.getElementById('mdelay');
+	e.value = obj["mdelay"];	
+	
+	document.getElementById('sel').value = en;
+}
+
+
+function getNetwork()
+{
+	var options = { url: 'getNetworks', 
+	  data: 'en=0', 	
+	  success: function(obj) {
+			setByObj(obj);			
+	  },
+	  fail: function(err) {	
+	  }
+	};	
+	ajaxRequest(options);
+}
+
+
+// 网页加载时执行函数	
+function pageload() 
+{	
+	getNetwork();
+	
+	// 测试代码
+	// var arr = {en:1, port:502, url:"192.168.100.215", mdelay:15, path:"/"};
+	// setByObj(arr); 
+}
+
+
+function checkInput()
+{	
+	var url = document.getElementById('url').value;
+	if (url==null || url=="") {
+		alert("RTU地址输入有误，请重新输入!");	return false;
+	}
+	
+	var port = document.getElementById('port').value;
+	if (port==null || port=="") {
+		alert("端口输入有误，请重新输入!");	return false;
+	}
+	
+	var path = document.getElementById('path').value;
+	if (path==null || path=="") {
+		alert("路径输入有误，请重新输入!");	return false;
+	}
+	
+	var mdelay = document.getElementById('mdelay').value;
+	if (mdelay==null || mdelay=="") {
+		alert("时间间隔输入有误，请重新输入!");	return false;
+	}
+
+	var ret = confirm("\n操作确认执行此?\n"); 
+	return ret;
+}
+
+function setSlave()
+{
+	var ret = checkInput();
+	if(ret) {
+		var en = document.getElementById('sel').value;
+		var port = document.getElementById('port').value;
+		var url = document.getElementById('url').value;
+		var path = document.getElementById('path').value;
+		var mdelay = document.getElementById('mdelay').value;
+		
+		var options = { url: 'setNetworks', 
+		  data: 'en={0}&port={1}&url={2}&mdelay={3}&path={4}'.format(en, port, url, mdelay, path), 	
+		  success: function(res) {
+		  
+		  },
+		  fail: function(err) {
+				alert("操作失败");		
+		  }
+		};	
+		ajaxRequest(options);
+	}	
+}
+
+
+</script>
+</head>
+<body style="margin:0px; font-size:12px;" onLoad="pageload();">
+	
+	<table width="700">
+		<tr align="left" style="color:#FFFFFF;background:#0054A8; height:22px; font-size:14px;">
+			<td colspan="2">数据推送配置</td></tr>
+		<tr><td ><br /></td><td></td></tr>
+				
+		<tr> 
+			<td >推送模式:</td>
+			<td>
+				<select id="sel" onchange="selOnchange(this.value)" style="width:170px;">
+					<option value=0>禁用模式</option>
+					<option value=1>UDP</option>
+					<option value=2>TCP Client</option>
+					<option value=3>websocket</option>
+					<option value=4>http post</option>
+				</select>
+			</td>
+		</tr>
+		
+		<tr> 
+			<td>地址:</td>
+			<td><input id="url" type="url" /></td>
+		</tr>
+		
+		<tr> 
+			<td>端口:</td>
+			<td><input id="port" type="number" /></td>
+		</tr>	
+		  
+		<tr>
+			<td>路径:</td>
+			<td><input id="path" type="text" /> </td>
+		</tr>
+
+		<tr>
+			<td>间隔:</td>
+			<td><input id="mdelay" type="number" /> S</td>
+		</tr>
+		
+		<tr><td><br /></td><td></td></tr>
+		
+		<tr>
+			<td></td>
+			<td><input type="button" value="保存" onClick="setSlave();" /></td>			
+		</tr>
+	</table>
+	数据推送说明：<br />
+	设备数据推送提供，UDP，TCP Client、websocket、http post四种推送方式，数据都使用Json格式进行传递，其中：<br />
+	1、UDP推送：设备会定时往目的地发送数据，设备也会监听12707端口，当此端口收到合法的Json格式数据就会进行解析<br />
+	2、TCP Client：设备会主动连接目标,连接成功后就会定时发送数据 <br />
+	3、websocket：同TCP类似，<br />
+	4、http post：同TCP类似，<br />
+	
+
+	<br />注意，在局域网中推介使用UDP，进行数据推送，网络连接出错时，设备会延时再次尝试连接主机 <br />
+	
+	
+	
+</body>
+</html>
