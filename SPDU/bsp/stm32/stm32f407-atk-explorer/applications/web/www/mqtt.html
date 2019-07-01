@@ -1,0 +1,105 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>mqtt</title>
+
+<script type="text/javascript" src="ajax.js"></script>
+<script type="text/javascript">
+
+
+</script>
+</head>
+<body style="margin:0px; font-size:12px;" onLoad="pageload();">
+	
+	<table width="700">
+		<tr align="left" style="color:#FFFFFF;background:#0054A8; height:22px; font-size:14px;">
+			<td colspan="2">MQTT配置</td></tr>
+		<tr><td ><br /></td><td></td></tr>
+				
+		<tr> 
+			<td >是否启用:</td>
+			<td>
+				<select id="sel" onchange="selOnchange(this.value)" style="width:170px;">
+					<option value=0>禁用</option>
+					<option value=1>启用</option>
+				</select>
+			</td>
+		</tr>
+		
+		<tr> 
+			<td>Host主机:</td>
+			<td><input id="url" type="url" /></td>
+		</tr>
+		
+		<tr> 
+			<td>Port端口:</td>
+			<td><input id="port" type="number" /></td>
+		</tr>	
+		  
+		<tr>
+			<td>登陆用户:</td>
+			<td><input id="usr" type="text" /> </td>
+		</tr>
+
+		<tr>
+			<td>登陆密码:</td>
+			<td><input id="pass" type="text" /> </td>
+		</tr>
+		
+		<tr>
+			<td> Client ID:</td>
+			<td><input id="cid" type="text" /> </td>
+		</tr>
+		
+		<tr>
+			<td> Keep-Alive保活:</td>
+			<td><input id="keep_alive" type="number" /> </td>
+		</tr>
+		
+		<tr>
+			<td> Clean Session:</td>
+			<td><input id="cleansession" type="number" /> </td>
+		</tr>
+		
+		<tr>
+			<td> Publish发布Topic :</td>
+			<td><input id="pub_topic" type="text" /> </td>
+		</tr>
+		
+		<tr>
+			<td> Retain :</td>
+			<td><input id="retain" type="text" /> </td>
+		</tr>
+		
+		
+		<tr>
+			<td> Subscribe订阅Topic :</td>
+			<td><input id="sub_topic" type="text" /> </td>
+		</tr>
+		
+		<tr>
+			<td> QoS服务质量Subscribe订阅 :</td>
+			<td><input id="qos" type="text" /> </td>
+		</tr>
+		
+		
+		<tr>
+			<td></td>
+			<td><input type="button" value="保存" onClick="setSlave();" /></td>			
+		</tr>
+	</table>
+	数据推送说明：<br />
+	设备数据推送提供，UDP，TCP Client、websocket、http post四种推送方式，数据都使用Json格式进行传递，其中：<br />
+	1、UDP推送：设备会定时往目的地发送数据，设备也会监听12707端口，当此端口收到合法的Json格式数据就会进行解析<br />
+	2、TCP Client：设备会主动连接目标,连接成功后就会定时发送数据 <br />
+	3、websocket：同TCP类似，<br />
+	4、http post：同TCP类似，<br />
+	
+
+	<br />注意，在局域网中推介使用UDP，进行数据推送，网络连接出错时，设备会延时再次尝试连接主机 <br />
+	
+	
+	
+</body>
+</html>

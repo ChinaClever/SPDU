@@ -7,16 +7,17 @@
   
 	function clk(id)
 	{
-		var page = "output_sw.html"
+		var page = "output_sw"
 		switch(id) {
-		case 1: page = "output_sw.html"; break;
-		case 2: page = "output_timer.html"; break;
-		case 3: page = "device_timer.html"; break;
-		case 4: page = "devset.html"; break; 
-		case 5: page = "modbus.html"; break; 
-		case 6: page = "network.html"; break; 
+		case 1: page = "output_sw"; break;
+		case 2: page = "output_timer"; break;
+		case 3: page = "device_timer"; break;
+		case 4: page = "devset"; break; 
+		case 5: page = "modbus"; break; 
+		case 6: page = "network"; break; 
+		case 7: page = "mqtt"; break; 
 		}		
-		document.getElementById("ifrm").src=page;   
+		document.getElementById("ifrm").src = page+".html";   
 	}
 
 	function mov(obj) {
@@ -31,7 +32,7 @@
 	<!--
 	[onmouseout] { position:absolute;  width: 200px;  height:25px;  left: 10px; background-color:#f2f2f2; }		
 	.title{position:absolute; left:27px; top:5px; font-family:Arial; font-size:14px;color:#FFFFFF;}
-	.menu { position:absolute; left:18px; top:5px; font-family:Arial; font-size:12px; color:#0054A8; width: 57px; }
+	.menu { position:absolute; left:18px; top:5px; font-family:Arial; font-size:12px; color:#0054A8; width: 67px; }
 	.divtitle { position:absolute;  border-style:solid;  border-width:1px;  border-color: 0054A8;  width: 220px; height:25px;  left: -1px; top:-1px;  background-color:#0054A8; }
 	.devframe { border-style:solid;  border-width:1px;  border-color: #0054A8;  position:relative;  width: 220px;  left: -362px; 
 	}
@@ -86,7 +87,7 @@
        <span class="menu">数据推送</span>
       </div> 
       <div style=" top:120px;" onclick="clk(7);" onmouseout="movout(this);" onmousemove="mov(this);"> 
-       <span class="menu">SNMP/Telnet</span>
+       <span class="menu">MQTT设置</span>
       </div> 
       <div style=" top:160px;" onclick="clk(8);" onmouseout="movout(this);" onmousemove="mov(this);"> 
        <span class="menu">邮件设置</span>
