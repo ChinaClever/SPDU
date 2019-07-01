@@ -49,7 +49,7 @@ static void mqtt_sub_callback(MQTTClient *c, MessageData *msg_data)
 			(char *)msg_data->message->payload);
 
 	if(msg_data->message->payloadlen > 0) {
-		json_iot_analysis((char *)msg_data->message->payload));
+		json_iot_analysis((char *)msg_data->message->payload);
 	}
 }
 
