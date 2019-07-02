@@ -174,7 +174,7 @@ static void ali_message_set(void *pcontext, void *pclient, iotx_mqtt_event_msg_p
 	EXAMPLE_TRACE("----");
 }
 
-static void ali_mqtt_close(void)
+void ali_mqtt_close(void)
 {
 	if(is_running == 0) return ;
 	IOT_MQTT_Yield(pclient, 200);

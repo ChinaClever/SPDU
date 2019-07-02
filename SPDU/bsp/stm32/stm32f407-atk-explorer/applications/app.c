@@ -6,10 +6,7 @@
  */
 #include "btn.h"
 #include "ctimer.h"
-#include "modbus_server.h"
-#include "ali_thread.h"
-#include "network.h"
-#include "mqtt_client.h"
+#include "web_main.h"
 
 void app_thread_pool(void)
 {
