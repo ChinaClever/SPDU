@@ -8,7 +8,7 @@
 
 static struct sMdCfg gMdCfg;
 
-struct sMdCfg *md_get_cfg(void)
+struct sMdCfg *md_cfg_get(void)
 {
 	struct sMdCfg *md = &gMdCfg;
 
@@ -28,7 +28,7 @@ struct sMdCfg *md_get_cfg(void)
 }
 
 
-void md_set_cfg(struct sMdCfg *t)
+void md_cfg_set(struct sMdCfg *t)
 {
 	struct sMdCfg *md = &gMdCfg;
 	md->en = t->en;

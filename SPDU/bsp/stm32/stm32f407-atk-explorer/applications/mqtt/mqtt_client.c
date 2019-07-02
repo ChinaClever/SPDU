@@ -111,7 +111,7 @@ static int mqtt_start(MQTTClient *client, struct sMqtt *ci)
 
 	/* config MQTT will param. */
 	client->condata.willFlag = 1;
-	client->condata.will.qos = ci->qos; // QOS1
+	client->condata.will.qos = ci->pub_qos; // QOS1
 	client->condata.will.retained = ci->retain;
 	client->condata.will.topicName.cstring = ci->pub_topic;
 	client->condata.will.message.cstring = MQTT_WILLMSG;
@@ -124,7 +124,7 @@ static int mqtt_start(MQTTClient *client, struct sMqtt *ci)
 	/* set subscribe table and event callback */
 	client->messageHandlers[0].topicFilter = rt_strdup(ci->sub_topic);
 	client->messageHandlers[0].callback = mqtt_sub_callback;
-	client->messageHandlers[0].qos = ci->qos; // QOS1
+	client->messageHandlers[0].qos = ci->sub_qos; // QOS1
 
 	/* set default subscribe event callback */
 	client->defaultMessageHandler = mqtt_sub_default_callback;
@@ -139,7 +139,7 @@ static int mqtt_publish(MQTTClient *client, struct sMqtt *ci)
 {
 	int ret = 0;
 	if(client->isconnected) {
-		ret = paho_mqtt_publish(client, ci->qos, ci->pub_topic, ci->pub_payload);
+		ret = paho_mqtt_publish(client, ci->pub_qos, ci->pub_topic, ci->pub_payload);
 	}
 
 	return ret;

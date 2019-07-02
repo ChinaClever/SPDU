@@ -42,7 +42,7 @@ modbus_t *mb_rtu_init(int addr, uint baud)
 modbus_t *mb_init(void)
 {
 	modbus_t *ctx = NULL;
-	struct sMdCfg *md = md_get_cfg();
+	struct sMdCfg *md = md_cfg_get();
 
 	if(md->en) {
 		ctx = mb_rtu_init(md->addr, md->baud);
@@ -93,7 +93,7 @@ void mb_down_task(void *param)
 {
 	int i, rc=0;
 	modbus_t *ctx = mb_init();
-	struct sMdCfg *md = md_get_cfg();
+	struct sMdCfg *md = md_cfg_get();
 	mb_mapping = modbus_mapping_new(0, 0, 2*MD_REG_NUM, 2*MD_REG_NUM);
 
 	while(1) {

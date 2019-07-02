@@ -46,6 +46,7 @@ void web_main(void)
 
 	web_modbus();
 	web_network();
+	web_mqtt();
 
 	webnet_init();
 }

@@ -10,7 +10,7 @@
 void web_network_get(struct webnet_session* session)
 {
 	char *ptr=pWebQuest;
-	struct sNetPush *t = get_net_cfg();
+	struct sNetPush *t = net_cfg_get();
 
 	ptr[0] = 0;
 	sprintf(ptr, "en=%d", t->en); ptr += strlen(ptr);
@@ -31,13 +31,13 @@ void web_network_set(struct webnet_session* session)
 	const char *path_str = webnet_request_get_query(request, "path");
 	const char *mdelay_str = webnet_request_get_query(request, "mdelay");
 
-	struct sNetPush *t = get_net_cfg();
+	struct sNetPush *t = net_cfg_get();
 	t->en = atoi(en_str);
 	t->port = atoi(port_str);
 	sprintf(t->url, url_str);
 	sprintf(t->path, path_str);
 	t->mdelay = atoi(mdelay_str);
-	set_net_cfg();
+	net_cfg_set();
 
 	static const char* status = "en=%d&port=%d&url=%s&path=%s&mdelay=%d";
 	webnet_session_printf(session, status, t->en, t->port, t->url,t->path, t->mdelay);

@@ -19,8 +19,8 @@ struct sNetPush {
 	uchar connects; // 尝试连接次数
 };
 
-void set_net_cfg(void);
-struct sNetPush *get_net_cfg(void);
-int get_net_dalay(void);
+void net_cfg_set(void);
+struct sNetPush *net_cfg_get(void);
+int net_dalay_get(void);
 
 #endif /* BSP_STM32_STM32F407_ATK_EXPLORER_APPLICATIONS_NETWORK_NET_CFG_H_ */

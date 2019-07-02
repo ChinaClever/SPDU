@@ -24,10 +24,11 @@ struct sMqtt {
 	char cleansession;
 
 	char pub_topic[32];
-	char qos; // QoS服务质量 	0最多一次传输   1至少一次传输   2 只有一次传输
+	char pub_qos; // QoS服务质量 	0最多一次传输   1至少一次传输   2 只有一次传输
 	char retain;
 
 	char sub_topic[32];
+	char sub_qos; // QoS服务质量 	0最多一次传输   1至少一次传输   2 只有一次传输
 
 	char *pub_payload;
 	short mdelay;
@@ -36,4 +37,5 @@ struct sMqtt {
 struct sMqtt *mqtt_cfg_get(void);
 int mqtt_cfg_mdelay(void);
 
+void mqtt_cfg_set(void);
 #endif /* BSP_STM32_STM32F407_ATK_EXPLORER_APPLICATIONS_MQTT_MQTT_CFG_H_ */

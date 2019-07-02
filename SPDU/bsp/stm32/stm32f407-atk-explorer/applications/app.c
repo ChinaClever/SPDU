@@ -16,7 +16,7 @@ void app_thread_pool(void)
 	timer_thread();
 //	modbus_thread();
 //	net_work_thread();
-	mqtt_work_thread();
+//	mqtt_work_thread();
 
 //	btn_thread();
 //	ali_thread();

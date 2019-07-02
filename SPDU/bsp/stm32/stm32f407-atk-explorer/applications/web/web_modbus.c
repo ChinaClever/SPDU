@@ -10,7 +10,7 @@
 void web_modbus_get(struct webnet_session* session)
 {
 	char *ptr=pWebQuest;
-	struct sMdCfg *t = md_get_cfg();
+	struct sMdCfg *t = md_cfg_get();
 
 	ptr[0] = 0;
 	sprintf(ptr, "en=%d", t->en); ptr += strlen(ptr);
@@ -34,7 +34,7 @@ void web_modbus_set(struct webnet_session* session)
 	t.port = atoi(port_str);
 	t.addr = atoi(addr_str);
 	t.baud = atoi(baud_str);
-	md_set_cfg(&t);
+	md_cfg_set(&t);
 
 	static const char* status = "en=%d&port=%d&addr=%d&baud=%d";
 	webnet_session_printf(session, status, t.en, t.port, t.addr, t.baud);
