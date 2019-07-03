@@ -7,7 +7,7 @@
 
 #ifndef BSP_STM32_STM32F407_ATK_EXPLORER_APPLICATIONS_JSON_JSON_NET_H_
 #define BSP_STM32_STM32F407_ATK_EXPLORER_APPLICATIONS_JSON_JSON_NET_H_
-#include "dev_cfg.h"
+#include "../devcfg/dev_cfg.h"
 #include "stddef.h"
 #include "cJSON.h"
 

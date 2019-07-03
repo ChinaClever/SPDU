@@ -1,0 +1,38 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>mqtt</title>
+
+<script type="text/javascript" src="ajax.js"></script>
+<script type="text/javascript">
+// 网页加载时执行函数	
+function pageload() 
+{	
+	getMqtts();	
+}
+
+</script>
+</head>
+<body style="margin:0px; font-size:12px;" onLoad="pageload();">
+	<table width="700">
+		<tr align="left" style="color:#FFFFFF;background:#0054A8; height:22px; font-size:14px;">
+			<td colspan="2">SNMP服务</td></tr>
+		<tr><td ><br /></td><td></td></tr>
+	</table>
+	
+	设备SNMP服务默认已开启：<br />
+	SNMP版本：SNMPv2c <br />
+	Get community:请使用public <br />
+	Set community:请使用private <br />
+	
+	提供mibs包含：系统OID和设备OID，其中：<br />
+	1、系统OID请使用Walk命令查看： 1.3.6.1.2.1<br />
+	2、设备OID请使用Walk命令查看： 1.3.6.1.4.1.30966.20<br />
+	SNMP协议管理设备信息对应的OID请参照下表如下：
+	1.3.6.1.4.1.30966.20.1.1.0  第一个输端口的开关状态，可读可写
+	
+	<br />注意，推介使用Walk，使用Walk命令时，请误尝试在5秒内多次请求，请适当的降低请求频率，以免出现无法预料的错误 <br />
+	使用get命令读取节点时，请误尝试在1秒内多次请求，请适当的降低请求频率，以免出现无法预料的错误<br />
+</body>
+</html>	
