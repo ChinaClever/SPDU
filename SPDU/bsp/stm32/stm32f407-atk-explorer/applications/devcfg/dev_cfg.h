@@ -8,20 +8,9 @@
 #ifndef BSP_STM32_STM32F407_ATK_EXPLORER_APPLICATIONS_DEVCFG_DEV_CFG_H_
 #define BSP_STM32_STM32F407_ATK_EXPLORER_APPLICATIONS_DEVCFG_DEV_CFG_H_
 #include "data_packet.h"
+#include <easyflash.h>
 
 #define CFG_NAME_LEN 12
-
-struct sNetAddr {
-	boolean dhcp;
-	boolean ipV4;
-	boolean isUpload; // 数据是否上传
-
-	char ip[20]; // IP地址
-	char gw[20]; // 网关
-	char mask[20]; //子网掩码
-	char dns[20]; // DNS
-	char mac[20]; // mac地址
-};
 
 struct sLocalAddr {
 	boolean isUpload; // 数据是否上传
@@ -35,9 +24,10 @@ struct sLocalAddr {
 struct sDevCfg {
 	char devName[CFG_NAME_LEN];
 
-	struct sNetAddr net;
 	struct sLocalAddr local;
 };
 
+void boot_times_env(void);
+void run_times_env(void);
 
 #endif /* BSP_STM32_STM32F407_ATK_EXPLORER_APPLICATIONS_DEVCFG_DEV_CFG_H_ */

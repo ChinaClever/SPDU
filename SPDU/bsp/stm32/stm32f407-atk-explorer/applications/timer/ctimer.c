@@ -250,7 +250,9 @@ void timer_task(void *arg)
 		if(!ret) {
 			timer_outputs_task(num);
 		}
-		sleep(1);
+
+		ret = 1000 + rand()%550;
+		msleep(ret);
 	}
 }
 

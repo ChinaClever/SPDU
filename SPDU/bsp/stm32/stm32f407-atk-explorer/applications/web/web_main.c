@@ -10,36 +10,47 @@
 
 #include "web_main.h"
 
-
-
-static void asp_var_version(struct webnet_session* session)
+void web_dev_reset(struct webnet_session* session)
 {
-	RT_ASSERT(session != RT_NULL);
+	struct webnet_request* request = session->request;
+	const char *sel = webnet_request_get_query(request, "sel");
 
-	static const char *version = "0.0.1";
-	webnet_session_printf(session, version, RT_VERSION, RT_SUBVERSION, RT_REVISION);
+	int id = atoi(sel);
+	if(id) { // 恢复出厂设置
+
+	} else { // 设备复位
+
+	}
+
+	static const char* status = "sel=%s";
+	webnet_session_printf(session, status, sel);
 }
 
 
-// ASP 变量替换功能，可以匹配网页代码中 <% %> 标记中包含的变量，替换成代码中注册的执行函数
-void web_asp_var(void)
+void web_dev_version(struct webnet_session* session)
 {
-	webnet_asp_add_var("version", asp_var_version);
+	char *ptr=pWebQuest;
+
+	ptr[0] = 0;
+	sprintf(ptr, "version=0.0.1");
+	ptr += strlen(ptr);
+
+	webnet_session_printf(session, "%s", pWebQuest);
 }
+
 
 // AUTH 基本认证功能
 void web_auth_init(void)
 {
 	char auth[20] = {0};
-	sprintf(auth, "%s:%s", "admin", "admin");
+	struct sUser *user = user_cfg_get();
+	sprintf(auth, "%s:%s", user->name, user->pass);
 	webnet_auth_set("/", auth); // 设置认证信息：用户名及密码为 admin:admin
 }
 
 void web_main(void)
 {
 	web_auth_init();
-	web_asp_var();
-
 	web_output_sw();
 	web_timer_sw();
 	web_seq_timer();
@@ -48,6 +59,12 @@ void web_main(void)
 	web_network();
 	web_mqtt();
 	web_aliiot();
+	web_user();
+	web_ip_addr();
+	web_ntp_time();
+
+	webnet_cgi_register("getVersion", web_dev_version);
+	webnet_cgi_register("reset", web_dev_reset);
 
 	webnet_init();
 }
