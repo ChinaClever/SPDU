@@ -19,9 +19,9 @@ void app_thread_pool(void)
 
 //	btn_thread();
 //	ali_thread();
-	web_main();
+//	web_main();
 
 //	snmp_main();
-	telnet_server();
+//	telnet_server();
 }
 
