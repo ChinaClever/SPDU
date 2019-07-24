@@ -35,7 +35,9 @@ void user_env_read(struct sUser *user)
 struct sUser *user_cfg_get(void)
 {
 	struct sUser *user = &gUser;
-	user_env_read(user);
+	if(!strlen(user->name)) {
+		user_env_read(user);
+	}
 
 	return user;
 }

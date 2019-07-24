@@ -17,7 +17,7 @@ struct sMdCfg{
 	uint baud; // ²¨ÌØÂÊ
 };
 
-struct sMdCfg *md_cfg_get(void);
-void md_cfg_set(struct sMdCfg *t);
+struct sMdCfg *mb_cfg_get(void);
+void mb_cfg_set(struct sMdCfg *t);
 
 #endif /* BSP_STM32_STM32F407_ATK_EXPLORER_APPLICATIONS_MODBUS_MODBUS_CFG_H_ */

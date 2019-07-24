@@ -8,33 +8,54 @@
 
 static struct sMdCfg gMdCfg;
 
-struct sMdCfg *md_cfg_get(void)
+
+void mb_env_write(struct sMdCfg *mb)
 {
-	struct sMdCfg *md = &gMdCfg;
+	ef_set_env_blob("mb_port", &(mb->port), sizeof(mb->port));
+	ef_set_env_blob("mb_addr", &(mb->addr), sizeof(mb->addr));
+	ef_set_env_blob("mb_baud", &(mb->baud), sizeof(mb->baud));
+	ef_set_env_blob("mb_en", &(mb->en), sizeof(mb->en));
+}
 
-	if(0 == md->port) {
-		md->port = 502;
+void mb_env_default(struct sMdCfg *mb)
+{
+	mb->en = 0;
+	mb->port = 502;
+	mb->addr = 1;
+	mb->baud = 9600;
+	mb_env_write(mb);
+}
+
+void mb_env_read(struct sMdCfg *mb)
+{
+	int len = ef_get_env_blob("mb_en", &(mb->en), sizeof(mb->en), NULL);
+	if(len) {
+		ef_get_env_blob("mb_port", &(mb->port), sizeof(mb->port), NULL);
+		ef_get_env_blob("mb_addr", &(mb->addr), sizeof(mb->addr), NULL);
+		ef_get_env_blob("mb_baud", &(mb->baud), sizeof(mb->baud), NULL);
+	} else { // ¶ÁÈ¡Ê§°Ü£¬»Ö¸´Ä¬ÈÏÖµ
+		mb_env_default(mb);
 	}
-
-	if(0 == md->addr) {
-		 md->addr = 1;
-	}
-
-	if(0 == md->baud) {
-		md->baud = 9600;
-	}
-
-	return md;
 }
 
 
-void md_cfg_set(struct sMdCfg *t)
+struct sMdCfg *mb_cfg_get(void)
 {
-	struct sMdCfg *md = &gMdCfg;
-	md->en = t->en;
-	md->port = t->port;
-	md->addr = t->addr;
-	md->baud = t->baud;
+	struct sMdCfg *mb = &gMdCfg;
+	if(0 == mb->port) {
+		mb_env_read(mb);
+	}
+	return mb;
+}
 
+
+void mb_cfg_set(struct sMdCfg *t)
+{
+	struct sMdCfg *mb = &gMdCfg;
+	mb->en = t->en;
+	mb->port = t->port;
+	mb->addr = t->addr;
+	mb->baud = t->baud;
+	mb_env_write(mb);
 }
 
