@@ -1,0 +1,155 @@
+<!DOCTYPE HTML>
+<html>
+ <head> 
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" /> 
+  <title>SPDU</title> 
+  <script type="text/javascript" src="ajax.js"></script>
+  <script language="javascript">  
+	function clk(id)
+	{
+		var page = "output_status"
+		switch(id) {
+		case 1: page = "output_status"; break;
+		case 2: page = "output_timer"; break;
+		case 3: page = "device_timer"; break;
+		case 4: page = "devset"; break; 
+		case 5: page = "modbus"; break; 		
+		case 6: page = "snmp"; break;
+		case 7: page = "network"; break; 
+		case 8: page = "mqtt"; break; 
+		case 9: page = "aliiot"; break; 
+		case 10: page = "user"; break; 
+		case 11: page = "ipaddr"; break;
+		case 12: page = "settime"; break;
+		case 13: page = "telnet"; break;
+		case 14: page = "reset"; break; 		
+		}		
+		document.getElementById("ifrm").src = page+".html";   
+	}
+
+	function mov(obj) {
+	   obj.style.background="#B0C4DE";
+	}
+	
+	function movout(obj) {
+	   obj.style.background="#F5F5F5";
+	}
+	
+function getVersion()
+{
+	var options = { url: 'getVersion', 
+	  data: 'en=0', 	
+	  success: function(obj) {
+			var e = document.getElementById('version');
+			e.value = "Version:" + obj["version"];		
+	  },
+	  fail: function(err) {	
+	  }
+	};	
+	ajaxRequest(options);
+}
+
+// 网页加载时执行函数	
+function pageload() 
+{	
+	getVersion();
+}
+
+</script> 
+  <style type="text/css">
+	<!--
+	[onmouseout] { position:absolute;  width: 200px;  height:25px;  left: 10px; background-color:#f2f2f2; }		
+	.title{position:absolute; left:27px; top:5px; font-family:Arial; font-size:14px;color:#FFFFFF;}
+	.menu { position:absolute; left:18px; top:5px; font-family:Arial; font-size:12px; color:#0054A8; width: 67px; }
+	.divtitle { position:absolute;  border-style:solid;  border-width:1px;  border-color: 0054A8;  width: 220px; height:25px;  left: -1px; top:-1px;  background-color:#0054A8; }
+	.devframe { border-style:solid;  border-width:1px;  border-color: #0054A8;  position:relative;  width: 220px;  left: -362px; 
+	}
+	-->
+</style> 
+ </head> 
+ <body style="margin:0px; font-size:12px;" onLoad="pageload();">
+  <div align="center" style="height:auto;"> 
+   <div align="center" style="width: 950px; height:60px; background-color:#0054A8;"> 
+    <div align="center" style=" position:relative; width: 921px; height:50px; left: -2px; top: 7px;"> 
+     <div align="center" style=" position:absolute; width: 149px; height:1px; left: 6px; top: 5px;"> 
+      <div style="border: 1px solid #ffffff; position:absolute; top: 0px; height: 28px; left: 2px;">
+       <img src="logo.jpg" width="32" height="32/" />
+      </div> 
+      <div style="position: absolute; left: 75px; top: 10px; height: 20px; width: 97px;">
+       <a href="#" style="font-family:Arial; font-size:24px;color:#ffffff;">SPDU</a>
+      </div> 
+     </div> 
+     <div align="center" style=" position:absolute; width: 200px; height:18px; left: 755px; top: 27px;"> 
+      <span id = "version" style="font-family:Arial; font-size:14px;color:#FFF;">Version:1.2.1 </span>
+     </div> 
+    </div> 
+   </div> 
+   <hr style="border-style:solid; border-width:1px;width: 950px; height:5px; background-color:#0054A8;" /> 
+   <div align="center" style="border-bottom-style:none; width: 950px; height:450px;"> 
+    <div style="position:relative; width:950px; height:450px; left: 0px; top: 0px;"> 
+     <div align="center" class="devframe" style="height:200px; top: 2px;"> 
+      <div class="divtitle"> 
+       <span class="title">设备管理</span>
+      </div> 
+      <div style=" top:40px;" onclick="clk(1);" onmouseout="movout(this);" onmousemove="mov(this);"> 
+       <span class="menu">设备状态</span>
+      </div> 
+      <div style=" top:80px;" onclick="clk(2);" onmouseout="movout(this);" onmousemove="mov(this);"> 
+       <span class="menu">端口定时</span>
+      </div> 
+      <div style=" top:120px;" onclick="clk(3);" onmouseout="movout(this);" onmousemove="mov(this);"> 
+       <span class="menu">设备定时</span>
+      </div>
+	  <div style=" top:160px;" onclick="clk(4);" onmouseout="movout(this);" onmousemove="mov(this);"> 
+       <span class="menu">设备设置</span>
+      </div>
+     </div> 
+     <div align="center" class="devframe" style="height:240px; top: 17px;"> 
+      <div class="divtitle"> 
+       <span class="title">集成设置</span>
+      </div> 
+      <div style=" top:40px;" onclick="clk(5);" onmouseout="movout(this);" onmousemove="mov(this);"> 
+       <span class="menu">Modbus</span>
+      </div> 	  
+      <div style=" top:80px;" onclick="clk(6);" onmouseout="movout(this);" onmousemove="mov(this);"> 
+       <span class="menu">SNMP</span>
+      </div> 
+      <div style=" top:120px;" onclick="clk(7);" onmouseout="movout(this);" onmousemove="mov(this);"> 
+       <span class="menu">数据推送</span>
+      </div> 
+      <div style=" top:160px;" onclick="clk(8);" onmouseout="movout(this);" onmousemove="mov(this);"> 
+       <span class="menu">MQTT设置</span>
+      </div> 
+      <div style=" top:200px;" onclick="clk(9);" onmouseout="movout(this);" onmousemove="mov(this);"> 
+       <span class="menu">IOT服务</span>
+      </div> 
+     </div> 
+	 <div align="center" class="devframe" style="height:240px; top: 27px;"> 
+      <div class="divtitle"> 
+       <span class="title">服务设置</span>
+      </div> 
+      <div style=" top:40px;" onclick="clk(10);" onmouseout="movout(this);" onmousemove="mov(this);"> 
+       <span class="menu">用户设置</span>
+      </div> 	  
+      <div style=" top:80px;" onclick="clk(11);" onmouseout="movout(this);" onmousemove="mov(this);"> 
+       <span class="menu">网络设置</span>
+      </div> 
+      <div style=" top:120px;" onclick="clk(12);" onmouseout="movout(this);" onmousemove="mov(this);"> 
+       <span class="menu">时间设置</span>
+      </div> 
+      <div style=" top:160px;" onclick="clk(13);" onmouseout="movout(this);" onmousemove="mov(this);"> 
+       <span class="menu">Telnet</span>
+      </div> 
+      <div style=" top:200px;" onclick="clk(14);" onmouseout="movout(this);" onmousemove="mov(this);"> 
+       <span class="menu">重启</span>
+      </div> 
+     </div> 
+     <div style="position:absolute; left: 235px; width: 710px; top: 0px; height: 420px;"> 
+      <iframe id="ifrm" frameborder="no" border="0" width="100%" height="420" src="output_status.html" scrolling="auto"></iframe> 
+     </div> 
+    </div> 
+   </div> 
+   <hr style="border-style:dotted; border-width:1px; border-color: #0054A8; width: 950px; height:1px; background-color:#0054A8;" /> 深圳市克莱沃电子有限公司 
+  </div>  
+ </body>
+</html>

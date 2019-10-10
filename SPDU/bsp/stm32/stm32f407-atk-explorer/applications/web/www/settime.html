@@ -1,0 +1,121 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>settime</title>
+
+<script type="text/javascript" src="ajax.js"></script>
+<script type="text/javascript">
+
+
+// 以对像来设置数据 
+function setByObj(obj)
+{
+	var e = document.getElementById('time');
+	e.value = obj["time"];
+	
+	e = document.getElementById('settime');
+	e.value = new Date().Format("yyyy-MM-ddTHH:mm:ss");	
+}
+
+
+function getNtpTime()
+{
+	var options = { url: 'getNtpTime', 
+	  data: 'en=0', 	
+	  success: function(obj) {
+			setByObj(obj);			
+	  },
+	  fail: function(err) {	
+	  }
+	};	
+	ajaxRequest(options);
+}
+
+function getDevTime()
+{
+	var options = { url: 'getNtpTime', 
+	  data: 'en=0', 	
+	  success: function(obj) {
+			var e = document.getElementById('time');
+			e.value = obj["time"];		
+	  },
+	  fail: function(err) {	
+	  }
+	};	
+	ajaxRequest(options);
+}
+
+// 网页加载时执行函数	
+function pageload() 
+{	
+	getNtpTime();
+	window.setInterval("getDevTime()",1250);
+}
+
+
+function checkInput()
+{	
+	var settime = document.getElementById('settime').value;
+	if (settime==null || settime=="") {
+		alert("时间输入有误，请重新输入!");	return false;
+	}	
+
+	var ret = confirm("\n操作确认执行此?\n"); 
+	return ret;
+}
+
+function setSlave()
+{
+	var ret = checkInput();
+	if(ret) {
+		var settime = document.getElementById('settime').value;
+		
+		var options = { url: 'setNtpTime', 
+		  data: 'settime={0}'.format(settime), 	
+		  success: function(res) {
+		  
+		  },
+		  fail: function(err) {
+				alert("操作失败");		
+		  }
+		};	
+		ajaxRequest(options);
+	}	
+}
+
+
+</script>
+</head>
+<body style="margin:0px; font-size:12px;" onLoad="pageload();">
+	
+	<table width="700">
+		<tr align="left" style="color:#FFFFFF;background:#0054A8; height:22px; font-size:14px;">
+			<td colspan="2">时间设置</td></tr>
+		<tr><td ><br /></td><td></td></tr>		
+		
+		<tr> 
+			<td>当前时间:</td>
+			<td><input id="time" type="datetime-local" /></td>
+		</tr>
+		
+		<tr> 
+			<td>时间设置:</td>
+			<td><input id="settime" type="datetime-local" /></td>
+		</tr>
+		  
+		<tr><td><br /></td><td></td></tr>
+		
+		<tr>
+			<td></td>
+			<td><input type="button" value="保存" onClick="setSlave();" /></td>			
+		</tr>
+	</table>
+	时间设置说明：<br />
+	设备在能连外网的情况下，每小时都会自动同步网络时间：<br />
+	手动设置：请按格式填写日期和时间<br />	
+	
+	
+	
+</body>
+</html>

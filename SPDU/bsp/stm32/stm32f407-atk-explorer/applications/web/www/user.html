@@ -1,0 +1,123 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>user</title>
+
+<script type="text/javascript" src="ajax.js"></script>
+<script type="text/javascript">
+
+
+// 以对像来设置数据 
+function setByObj(obj)
+{	
+	var e = document.getElementById('name');
+	e.value = obj["name"];
+	
+	e = document.getElementById('pass');
+	e.value = obj["pass"];	
+	
+	e = document.getElementById('pwd');
+	e.value = obj["pass"];		
+}
+
+
+function getUser()
+{
+	var options = { url: 'getUser', 
+	  data: 'name=0', 	
+	  success: function(obj) {
+			setByObj(obj);			
+	  },
+	  fail: function(err) {	
+	  }
+	};	
+	ajaxRequest(options);
+}
+
+
+// 网页加载时执行函数	
+function pageload() 
+{	
+	getUser();	
+}
+
+
+function checkInput()
+{	
+	var name = document.getElementById('name').value;
+	if (name==null || name=="") {
+		alert("用户名 输入有误，请重新输入!");	return false;
+	}
+	
+	var pass = document.getElementById('pass').value;
+	if (pass==null || pass=="") {
+		alert("密码输入有误，请重新输入!");	return false;
+	}
+	
+	var pwd = document.getElementById('pwd').value;
+	if (pwd != pass) {
+		alert("密码输入不一致，请重新输入!");	return false;
+	}
+
+	var ret = confirm("\n操作确认执行此?\n"); 
+	return ret;
+}
+
+function setSlave()
+{
+	var ret = checkInput();
+	if(ret) {
+		var name = document.getElementById('name').value;
+		var pass = document.getElementById('pass').value;
+		
+		var options = { url: 'setUser', 
+		  data: 'name={0}&pass={1}'.format(name, pass), 	
+		  success: function(res) {
+		  
+		  },
+		  fail: function(err) {
+				alert("操作失败");		
+		  }
+		};	
+		ajaxRequest(options);
+	}	
+}
+
+
+</script>
+</head>
+<body style="margin:0px; font-size:12px;" onLoad="pageload();">
+	
+	<table width="700">
+		<tr align="left" style="color:#FFFFFF;background:#0054A8; height:22px; font-size:14px;">
+			<td colspan="2">用户设置</td></tr>
+		<tr><td ><br /></td><td></td></tr>
+				
+				
+		<tr> 
+			<td>账号:</td>
+			<td><input id="name" type="text" /></td>
+		</tr>
+		
+		<tr> 
+			<td>密码:</td>
+			<td><input id="pass" type="text" /></td>
+		</tr>
+		  
+		<tr>
+			<td>密码确认:</td>
+			<td><input id="pwd" type="text" /> </td>
+		</tr>		
+		<tr><td><br /></td><td></td></tr>
+		
+		<tr>
+			<td></td>
+			<td><input type="button" value="保存" onClick="setSlave();" /></td>			
+		</tr>
+	</table>
+	
+	
+	
+</body>
+</html>
