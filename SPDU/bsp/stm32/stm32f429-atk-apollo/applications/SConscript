@@ -7,8 +7,29 @@ src     = Split("""
 main.c
 """)
 
-src += Glob('wdt/*.c')
-CPPPATH += [cwd + '/wdt']
+src += Glob('common/datapacket/*.c')
+CPPPATH += [cwd + '/common/datapacket']
+
+src += Glob('common/cputemp/*.c')
+CPPPATH += [cwd + '/common/cputemp']
+
+src += Glob('common/iwdg/*.c')
+CPPPATH += [cwd + '/common/iwdg']
+
+src += Glob('common/json/*.c')
+CPPPATH += [cwd + '/common/json']
+
+src += Glob('btn/*.c')
+CPPPATH += [cwd + '/btn']
+
+src += Glob('aliiot/*.c')
+CPPPATH += [cwd + '/aliiot']
+
+src += Glob('mqtt/*.c')
+CPPPATH += [cwd + '/mqtt']
+
+src += Glob('manager/*.c')
+CPPPATH += [cwd + '/manager']
 
 group = DefineGroup('Applications', src, depend = [''], CPPPATH = CPPPATH)
 
