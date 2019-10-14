@@ -19,6 +19,9 @@ CPPPATH += [cwd + '/common/iwdg']
 src += Glob('common/json/*.c')
 CPPPATH += [cwd + '/common/json']
 
+src += Glob('common/list/*.c')
+CPPPATH += [cwd + '/common/list']
+
 src += Glob('btn/*.c')
 CPPPATH += [cwd + '/btn']
 
