@@ -5,6 +5,7 @@ cwd     = GetCurrentDir()
 CPPPATH = [cwd, str(Dir('#'))]
 src     = Split("""
 main.c
+app.c
 """)
 
 src += Glob('common/datapacket/*.c')
@@ -21,6 +22,9 @@ CPPPATH += [cwd + '/common/json']
 
 src += Glob('common/list/*.c')
 CPPPATH += [cwd + '/common/list']
+
+src += Glob('common/devcfg/*.c')
+CPPPATH += [cwd + '/common/devcfg']
 
 src += Glob('btn/*.c')
 CPPPATH += [cwd + '/btn']
@@ -39,6 +43,9 @@ CPPPATH += [cwd + '/tm1637']
 
 src += Glob('network/*.c')
 CPPPATH += [cwd + '/network']
+
+src += Glob('snmp/*.c')
+CPPPATH += [cwd + '/snmp']
 
 group = DefineGroup('Applications', src, depend = [''], CPPPATH = CPPPATH)
 
