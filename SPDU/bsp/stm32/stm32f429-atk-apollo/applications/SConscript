@@ -34,6 +34,12 @@ CPPPATH += [cwd + '/mqtt']
 src += Glob('manager/*.c')
 CPPPATH += [cwd + '/manager']
 
+src += Glob('tm1637/*.c')
+CPPPATH += [cwd + '/tm1637']
+
+src += Glob('network/*.c')
+CPPPATH += [cwd + '/network']
+
 group = DefineGroup('Applications', src, depend = [''], CPPPATH = CPPPATH)
 
 Return('group')
