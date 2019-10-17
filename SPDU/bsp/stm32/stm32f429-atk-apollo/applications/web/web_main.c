@@ -10,6 +10,8 @@
 
 #include "web_main.h"
 
+char pWebQuest[256]={0};
+
 void web_dev_reset(struct webnet_session* session)
 {
 	struct webnet_request* request = session->request;
@@ -48,12 +50,20 @@ void web_auth_init(void)
 	webnet_auth_set("/", auth); // 设置认证信息：用户名及密码为 admin:admin
 }
 
+
+void web_dev_num(struct webnet_session* session)
+{
+	char num = 5;
+	static const char* status = "num=%d";
+	webnet_session_printf(session, status, num);
+}
+
 void web_main(void)
 {
 	web_auth_init();
-	web_output_sw();
-	web_timer_sw();
-	web_seq_timer();
+	web_devstatus();
+	web_thresholds();
+	web_envs();
 
 	web_modbus();
 	web_network();
@@ -63,6 +73,7 @@ void web_main(void)
 	web_ip_addr();
 	web_ntp_time();
 
+	webnet_cgi_register("getDevNum", web_dev_num);
 	webnet_cgi_register("getVersion", web_dev_version);
 	webnet_cgi_register("reset", web_dev_reset);
 

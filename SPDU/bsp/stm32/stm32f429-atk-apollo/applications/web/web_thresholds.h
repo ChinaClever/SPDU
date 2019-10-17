@@ -7,10 +7,10 @@
 
 #ifndef BSP_STM32_STM32F407_ATK_EXPLORER_APPLICATIONS_WEB_WEB_TIMER_H_
 #define BSP_STM32_STM32F407_ATK_EXPLORER_APPLICATIONS_WEB_WEB_TIMER_H_
-#include "web_outputsw.h"
-#include "ctimer.h"
+#include "ctime.h"
+#include "web_devstatus.h"
 
-void web_timer_sw(void);
+void web_thresholds(void);
 
 
 #endif /* BSP_STM32_STM32F407_ATK_EXPLORER_APPLICATIONS_WEB_WEB_TIMER_H_ */

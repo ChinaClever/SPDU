@@ -47,6 +47,12 @@ CPPPATH += [cwd + '/network']
 src += Glob('snmp/*.c')
 CPPPATH += [cwd + '/snmp']
 
+src += Glob('modbus/*.c')
+CPPPATH += [cwd + '/modbus']
+
+src += Glob('web/*.c')
+CPPPATH += [cwd + '/web']
+
 group = DefineGroup('Applications', src, depend = [''], CPPPATH = CPPPATH)
 
 Return('group')
