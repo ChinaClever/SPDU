@@ -20,7 +20,6 @@ void app_thread(void)
 //	btn_thread();
 //	ali_thread();
 	web_main();
-	//wdt_init();
 
 //	snmp_main();
 //	telnet_server();
