@@ -15,6 +15,7 @@
 /* defined the LED0 pin: PB1 */
 #define LED0_PIN    GET_PIN(B, 1)
 #define FS_PARTITION_NAME  "filesystem"
+extern void app_thread(void);
 
 
 // ÖØÆô´ÎÊý
@@ -59,8 +60,6 @@ void init_flash()
     }
 }
 
-extern void app_thread(void);
-
 int main(void)
 {
     int count = 1;
@@ -69,7 +68,6 @@ int main(void)
 
 	fal_init();
 	init_flash();
-	//wdt_init();
 	
 	app_thread();
     while (count++)
