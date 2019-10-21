@@ -53,6 +53,9 @@ CPPPATH += [cwd + '/modbus']
 src += Glob('web/*.c')
 CPPPATH += [cwd + '/web']
 
+src += Glob('uart/*.c')
+CPPPATH += [cwd + '/uart']
+
 group = DefineGroup('Applications', src, depend = [''], CPPPATH = CPPPATH)
 
 Return('group')
