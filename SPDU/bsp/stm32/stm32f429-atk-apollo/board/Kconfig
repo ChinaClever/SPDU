@@ -24,6 +24,36 @@ menu "Onboard Peripheral Drivers"
         select BSP_USING_UART3
         default n
 
+	config BSP_USING_COM4
+        bool "Enable COM4"
+		select BSP_USING_UART
+        select BSP_USING_UART4
+        default n
+
+   config BSP_USING_COM5
+        bool "Enable COM5"
+		select BSP_USING_UART
+        select BSP_USING_UART5
+        default n
+
+    config BSP_USING_COM6
+        bool "Enable COM6"
+		select BSP_USING_UART
+        select BSP_USING_UART6
+        default n
+
+	config BSP_USING_COM7
+        bool "Enable COM7"
+		select BSP_USING_UART
+        select BSP_USING_UART7
+        default n
+
+    config BSP_USING_COM8
+        bool "Enable COM8"
+		select BSP_USING_UART
+        select BSP_USING_UART8
+        default n
+
     config BSP_USING_SDRAM
         bool "Enable SDRAM"
         select BSP_USING_FMC
@@ -101,6 +131,26 @@ menu "On-chip Peripheral Drivers"
                 bool "Enable UART3 RX DMA"
                 depends on BSP_USING_UART3 && RT_SERIAL_USING_DMA
                 default n  
+
+            config BSP_USING_UART4
+                bool "Enable UART4"
+                default n
+
+            config BSP_USING_UART5
+                bool "Enable UART5"
+                default n    
+
+            config BSP_USING_UART6
+                bool "Enable UART6"
+                default n
+
+            config BSP_USING_UART7
+                bool "Enable UART7"
+                default n    
+
+            config BSP_USING_UART8
+                bool "Enable UART8"
+                default n    
         endif
 
     config BSP_USING_ON_CHIP_FLASH
