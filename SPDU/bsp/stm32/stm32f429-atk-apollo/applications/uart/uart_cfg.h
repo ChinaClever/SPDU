@@ -9,7 +9,7 @@
 #define BSP_STM32_STM32F429_ATK_APOLLO_APPLICATIONS_UART_UART_CFG_H_
 #include <rtthread.h>
 #include "rtdevice.h"
-#include "data_opt.h"
+#include "data_packet.h"
 
 #define UARTS_NUM 6
 #define UART_DELAY 100
