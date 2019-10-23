@@ -19,7 +19,7 @@ static void rtu_task(int id, sRtu *rtu, sRtuRecv *rtuRecv)
 		boolean ret = rtu_recv_packet(rtu->recvBuf, rtn, rtuRecv);
 		if(ret) {
 			rtuRecv->data->offLine = 3;
-			rt_kprintf("rtu recv packet OK %d\n", id);
+			//rt_kprintf("rtu recv packet OK %d\n", id);
 		} else {
 			rt_kprintf("rtu recv packet err %d\n", id);
 		}
@@ -41,7 +41,7 @@ static int rtu_set_task(sRtu *rtu)
 				sleep(1); res = rtu_trans(rtu);  // 命令发送失败，再发一次
 				rt_kprintf("rtu set cmd err %d\n", res);
 			} else {
-				rt_kprintf("rtu set cmd OK %d\n", res);
+				//rt_kprintf("rtu set cmd OK %d\n", res);
 			}
 			msleep(650);
 		}
