@@ -7,10 +7,11 @@
 #include "rtu_thread.h"
 
 
+
 static void rtu_task(int id, sRtu *rtu, sRtuRecv *rtuRecv)
 {
 	rtuRecv->data = data_packet_get(id);
-	rtu->sentLen = rtu_sentAc(1, rtu->sentBuf);
+	rtu->sentLen = rtu_cmdAc(1, rtu->sentBuf);
 	if(rtuRecv->data->offLine > 0) rtuRecv->data->offLine--;
 
 	short rtn = rtu_trans(rtu);
@@ -27,19 +28,47 @@ static void rtu_task(int id, sRtu *rtu, sRtuRecv *rtuRecv)
 	}
 }
 
+
+static int rtu_set_task(sRtu *rtu)
+{
+	int res, ret;
+
+	do {
+		ret = rtu_getCmd(rtu);
+		if(ret > 0) {
+			res = rtu_sent(rtu);
+			if(memcmp(rtu->sentBuf, rtu->recvBuf,res)) {
+				sleep(1); res = rtu_trans(rtu);  // 命令发送失败，再发一次
+				rt_kprintf("rtu set cmd err %d\n", res);
+			} else {
+				rt_kprintf("rtu set cmd OK %d\n", res);
+			}
+			msleep(650);
+		}
+	} while(ret > 0);
+
+	return ret;
+}
+
+
 static void rtu_thread_entry(void *arg)
 {
 	sRtuRecv rtuRecv;
 	int i, id = (uint)arg;
+	msleep((id+1)*100);
 	sRtu *rtu = rtu_cfg_get(id);
 	rtu->dev = rtu_open(rtu->name);
 
-	rtu->start = rtu->end = 1;
+	///// 测试用
+	if(id == 0)	rtu->start = rtu->end = 1;
+
 	while (1)
 	{
+		if(id == 0) rtu_clean_ele(1);
 		for(i=rtu->start; i<=rtu->end; ++i) {
+			rtu_set_task(rtu); // 先发设置命令
 			rtu_task(i, rtu, &rtuRecv);
-			msleep(300);
+			msleep(450);
 		}
 	}
 }
@@ -50,7 +79,8 @@ void rtu_thread_pool(void)
 	char name[8];
 	uint i=0, num=UARTS_NUM;
 
-	for(i=0; i<=num; ++i) {
+	for(i=0; i<num; ++i)
+	{
 		sprintf(name, "rtu_%d", i+1);
 		rt_thread_t thread = rt_thread_create(name, rtu_thread_entry, (void *)(i), 512, 4+i, 10+i);
 		if (thread != RT_NULL) {

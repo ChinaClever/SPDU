@@ -16,10 +16,11 @@ void rtu_cfg_pin(sRtu *rtu)
 void rtu_cfg_init(sRtus *rtus)
 {
 	short i = 0;
-	for(i=0; i<=UARTS_NUM; ++i) {
+	for(i=0; i<UARTS_NUM; ++i) {
 		sRtu *rtu =  &(rtus->rtu[i]);
 		rtu->id = i;
 		rtu_cfg_pin(rtu);
+		rtu->cmds = list_new();  // ³õÊ¼»¯Á´±í
 		sprintf(rtu->name, "uart%d", 2+i);
 		rtu->start = i*UART_PORT_NUM+1;
 		rtu->end = (i+1)*UART_PORT_NUM;
@@ -38,6 +39,13 @@ sRtu *rtu_cfg_get(int id)
 	return &(rtus->rtu[id]);
 }
 
+
+sRtu *rtu_cfg_addr(uchar addr)
+{
+	short id = (addr-1)/UART_PORT_NUM;
+	return rtu_cfg_get(id);
+}
+
 sRtu *rtu_cfg_device(rt_device_t dev)
 {
 	short i = 0;
@@ -48,3 +56,4 @@ sRtu *rtu_cfg_device(rt_device_t dev)
 	}
 	return rtu;
 }
+

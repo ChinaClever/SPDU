@@ -4,7 +4,7 @@
  *  Created on: 2019年10月22日
  *      Author: luozhiyong
  */
-#include "rtu_sent.h"
+#include "rtu_sentcmd.h"
 
 static ushort calccrc (ushort crc, uchar crcbuf)
 {
@@ -55,7 +55,7 @@ uchar rtu_xorsum(uchar *buf, int len)
   * 出口参数：ptr -> 缓冲区
   * 返回值：打包后的长度
   */
-int rtu_sent_packet(sRtuSent *pkt, uchar *ptr)
+static int rtu_sent_packet(sRtuSent *pkt, uchar *ptr)
 {
     uchar *buf = ptr;
     *(ptr++) = pkt->addr;  /*地址码*/
@@ -85,7 +85,7 @@ int rtu_sent_packet(sRtuSent *pkt, uchar *ptr)
   * 出口参数：ptr -> 缓冲区
   * 返回值：打包后的长度
   */
-static int rtu_send(uchar addr, uchar *buf, uchar len)
+static int rtu_sendCmd(uchar addr, uchar *buf, uchar len)
 {
     static sRtuSent msg;
 
@@ -96,14 +96,14 @@ static int rtu_send(uchar addr, uchar *buf, uchar len)
     return rtu_sent_packet(&msg, buf);
 }
 
-int rtu_sentAc(uchar addr, uchar *buf)
+int rtu_cmdAc(uchar addr, uchar *buf)
 {
-	return rtu_send(addr, buf, SI_RTU_AC_LEN);
+	return rtu_sendCmd(addr, buf, SI_RTU_AC_LEN);
 }
 
-int rtu_sentDc(uchar addr, uchar *buf)
+int rtu_cmdDc(uchar addr, uchar *buf)
 {
-	return rtu_send(addr, buf, SI_RTU_DC_LEN);
+	return rtu_sendCmd(addr, buf, SI_RTU_DC_LEN);
 }
 
 /**
@@ -112,7 +112,7 @@ int rtu_sentDc(uchar addr, uchar *buf)
   * 出口参数：ptr -> 缓冲区
   * 返回值：打包后的长度
   */
-int rtu_sentCmd(uchar addr, ushort reg, ushort value, uchar *buf)
+static int rtu_cmd(uchar addr, ushort reg, ushort value, uchar *buf)
 {
     static sRtuSent msg;
 
@@ -122,4 +122,9 @@ int rtu_sentCmd(uchar addr, ushort reg, ushort value, uchar *buf)
     msg.len = value;
 
     return rtu_sent_packet(&msg, buf);
+}
+
+int rtu_sentCmd(sRtuSetCmd *cmd, uchar *buf)
+{
+	return rtu_cmd(cmd->addr, cmd->reg, cmd->value, buf);
 }
