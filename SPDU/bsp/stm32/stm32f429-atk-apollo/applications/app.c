@@ -6,6 +6,7 @@
  */
 //#include "btn.h"
 #include "cpu_temp.h"
+#include "rtu_thread.h"
 #include "web_main.h"
 
 //extern void telnet_server(void);
@@ -20,6 +21,7 @@ void app_thread(void)
 //	btn_thread();
 //	ali_thread();
 	web_main();
+	rtu_thread_pool();
 
 //	snmp_main();
 //	telnet_server();

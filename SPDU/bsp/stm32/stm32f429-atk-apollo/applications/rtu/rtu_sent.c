@@ -85,11 +85,12 @@ int rtu_sent_packet(sRtuSent *pkt, uchar *ptr)
   * 出口参数：ptr -> 缓冲区
   * 返回值：打包后的长度
   */
-int rtu_sent(uchar addr, uchar *buf, uchar len)
+static int rtu_send(uchar addr, uchar *buf, uchar len)
 {
     static sRtuSent msg;
 
     msg.addr = addr;
+    msg.fn = 0x03;
     msg.len = len;
 
     return rtu_sent_packet(&msg, buf);
@@ -97,12 +98,12 @@ int rtu_sent(uchar addr, uchar *buf, uchar len)
 
 int rtu_sentAc(uchar addr, uchar *buf)
 {
-	return rtu_sent(addr, buf, SI_RTU_AC_LEN);
+	return rtu_send(addr, buf, SI_RTU_AC_LEN);
 }
 
 int rtu_sentDc(uchar addr, uchar *buf)
 {
-	return rtu_sent(addr, buf, SI_RTU_DC_LEN);
+	return rtu_send(addr, buf, SI_RTU_DC_LEN);
 }
 
 /**
