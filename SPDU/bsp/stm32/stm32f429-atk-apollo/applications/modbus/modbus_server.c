@@ -26,8 +26,6 @@ int mb_tcp_en()
 }
 
 
-
-
 /**
  * 错误返回
  * 功能码 1个字节 请求功能码+0x80
@@ -52,15 +50,15 @@ void mb_entry(modbus_t *ctx, const uchar *req, int rc)
 
 	switch(function)
 	{
-	case MODBUS_FC_READ_HOLDING_REGISTERS: // 读
+	case MODBUS_FC_READ_HOLDING_REGISTERS: // 读 0x03命令
 		ret = mb_read_packet(addr, mb_mapping);
 		break;
 
-	case MODBUS_FC_WRITE_SINGLE_REGISTER: // 写单个寄存器
+	case MODBUS_FC_WRITE_SINGLE_REGISTER: // 写单个寄存器 0x06命令
 		ret = mb_write_reg(addr, reg, FLIPW(ptr));
 		break;
 
-	case MODBUS_FC_WRITE_MULTIPLE_REGISTERS: // 写
+	case MODBUS_FC_WRITE_MULTIPLE_REGISTERS: // 写多个寄存器 0x10命令
 		ret = mb_write_regs(addr, reg, FLIPW(ptr), ptr);
 		break;
 	}
