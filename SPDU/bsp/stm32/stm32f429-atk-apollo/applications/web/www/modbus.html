@@ -15,21 +15,7 @@ function selOnchange(v)
 		obj.disabled = false;
 	} else {
 		obj.disabled = 'disabled';
-	}
-	
-	obj = document.getElementById('addr');	
-	if(2 == Number(v)) {
-		obj.disabled = false;
-	} else {
-		obj.disabled = 'disabled';
-	}
-	
-	obj = document.getElementById('baud');
-	if(2 == Number(v)) {
-		obj.disabled = false;
-	} else {
-		obj.disabled = 'disabled';
-	}
+	}	
 }
 
 // 以对像来设置数据 
@@ -39,13 +25,7 @@ function setByObj(obj)
 	selOnchange(en);
 	
 	var e = document.getElementById('port');
-	e.value = obj["port"];
-	
-	e = document.getElementById('addr');
-	e.value = obj["addr"];	
-	
-	e = document.getElementById('baud');
-	e.value = obj["baud"];	
+	e.value = obj["port"];	
 	
 	document.getElementById('sel').value = en;
 }
@@ -68,11 +48,11 @@ function getModbus()
 // 网页加载时执行函数	
 function pageload() 
 {	
-	getModbus();
+	//getModbus();
 	
-	// 测试代码
-	// var arr = {id:5, en:1, port:502, addr:1, baud:9600};
-	// setByObj(arr); 
+	//测试代码
+	var arr = {id:5, en:1, port:502};
+	setByObj(arr); 
 }
 
 
@@ -83,16 +63,6 @@ function checkInput()
 		alert("TCp 端口输入有误，请重新输入!");	return false;
 	}
 	
-	var addr = document.getElementById('addr').value;
-	if (addr==null || addr=="") {
-		alert("RTU地址输入有误，请重新输入!");	return false;
-	}
-	
-	var baud = document.getElementById('baud').value;
-	if (baud==null || baud=="") {
-		alert("RTU波特率输入有误，请重新输入!");	return false;
-	}
-
 	var ret = confirm("\n操作确认执行此?\n"); 
 	return ret;
 }
@@ -103,11 +73,9 @@ function setSlave()
 	if(ret) {
 		var en = document.getElementById('sel').value;
 		var port = document.getElementById('port').value;
-		var addr = document.getElementById('addr').value;
-		var baud = document.getElementById('baud').value;
 		
 		var options = { url: 'setModbus', 
-		  data: 'en={0}&port={1}&addr={2}&baud={3}'.format(en, port, addr, baud), 	
+		  data: 'en={0}&port={1}'.format(en, port), 	
 		  success: function(res) {
 		  
 		  },
@@ -135,7 +103,6 @@ function setSlave()
 				<select id="sel" onchange="selOnchange(this.value)" style="width:170px;">
 					<option value=0>禁用模式</option>
 					<option value=1>Modbus TCP</option>
-					<option value=2>Modbus RTU</option>
 				</select>
 			</td>
 		</tr>
@@ -144,16 +111,7 @@ function setSlave()
 			<td>TCP端口:</td>
 			<td><input id="port" type="number" /></td>
 		</tr>
-		
-		<tr> 
-			<td>RTU地址:</td>
-			<td><input id="addr" type="number" /></td>
-		</tr>
-		  
-		<tr>
-			<td>RTU波特率:</td>
-			<td><input id="baud" type="number" /> </td>
-		</tr>		
+
 		<tr><td><br /></td><td></td></tr>
 		
 		<tr>
