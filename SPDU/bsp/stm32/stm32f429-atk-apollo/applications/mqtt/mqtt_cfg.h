@@ -16,22 +16,24 @@ typedef struct sMqtt {
 	char host[32]; 	// Host主机
 	unsigned short port; 	// Port端口
 
-	char user[32]; 	// Username用户名
-	char pass[32]; 	// Password密码
+	char user[32]; 	// Username用户名    默认为空
+	char pass[32]; 	// Password密码   默认为空
 
 	char cid[32];	// Client ID
 	short keep_alive; // Keep-Alive保活
-	char cleansession;
+	char cleansession; // 默认为1
 
 	char pub_topic[32];
-	char pub_qos; // QoS服务质量 	0最多一次传输   1至少一次传输   2 只有一次传输
-	char retain;
+	char pub_qos; // 默认为1 // QoS服务质量 	0最多一次传输   1至少一次传输   2 只有一次传输
+	char retain; // 默认为0
 
 	char sub_topic[32];
-	char sub_qos; // QoS服务质量 	0最多一次传输   1至少一次传输   2 只有一次传输
+	char sub_qos; // 默认为1 // QoS服务质量 	0最多一次传输   1至少一次传输   2 只有一次传输
 
 	char *pub_payload;
 	short mdelay;
+	char isRun;
+	void *pclient;
 }sMqtt;
 
 sMqtt *mqtt_cfg_get(void);

@@ -61,14 +61,12 @@ void json_dataUnit(const char *str,int i, sDataUnit *unit, double rate, cJSON *j
 	cJSON_AddStringToObject(json, prefix, string);
 }
 
-int json_objData(const char *str, sObjData *ObjData, cJSON *obj)
+int json_objDataById(int i, sObjData *ObjData, cJSON *jsonArray)
 {
+	boolean ret = true;
 	char string[24]={0};
-	cJSON *jsonArray=cJSON_CreateArray();
 
-	int i,num=ObjData->size;
-	for(i=0; i<num; ++i)
-	{
+	if(i < ObjData->size) {
 		cJSON *subObj = cJSON_CreateObject();
 		cJSON_AddNumberToObject(subObj, "id", i+1);
 		//cJSON_AddStringToObject(subObj, "name", ObjData.name[i]);
@@ -91,13 +89,23 @@ int json_objData(const char *str, sObjData *ObjData, cJSON *obj)
 		cJSON_AddNumberToObject(subObj, "switch", ObjData->sw[i]);
 
 		cJSON_AddItemToArray(jsonArray,subObj);
+	} else {
+		ret = false;
 	}
+	return ret;
+}
 
-	if(num > 0){
+int json_objData(const char *str, sObjData *ObjData, cJSON *obj)
+{
+	char string[24]={0};
+	int i,num=ObjData->size;
+	if(num>0) {
+		cJSON *jsonArray=cJSON_CreateArray();
+		for(i=0; i<num; ++i) {
+			json_objDataById(i, ObjData, jsonArray);
+		}
 		sprintf(string, "%s_item_list", str);
 		cJSON_AddItemToObject(obj,string,jsonArray);
-	} else {
-		cJSON_Delete(jsonArray);
 	}
 
 	return num;
@@ -122,7 +130,7 @@ void json_envItem(const char *str, sDataUnit *unit, double rate, cJSON *obj)
 	}
 }
 
-void json_envs(sEnvData *ObjData, cJSON *json)
+int json_envs(sEnvData *ObjData, cJSON *json)
 {
 	if(ObjData->size) {
 		cJSON *obj = cJSON_CreateObject();
@@ -130,6 +138,8 @@ void json_envs(sEnvData *ObjData, cJSON *json)
 		json_envItem("hum", &(ObjData->hum), 1, obj);
 		cJSON_AddItemToObject(json,"env_item_list",obj);
 	}
+
+	return ObjData->size;
 }
 
 void json_pduInfo(sDataPacket *packet, cJSON *json)
@@ -170,5 +180,3 @@ char *json_build(short id)
 
 	return buf;
 }
-
-

@@ -8,7 +8,7 @@
 #ifndef BSP_STM32_STM32F407_ATK_EXPLORER_APPLICATIONS_WEB_WEB_MQTT_H_
 #define BSP_STM32_STM32F407_ATK_EXPLORER_APPLICATIONS_WEB_WEB_MQTT_H_
 #include "web_network.h"
-#include "mqtt_client.h"
+#include "mqtt_thread.h"
 
 void web_mqtt(void);
 

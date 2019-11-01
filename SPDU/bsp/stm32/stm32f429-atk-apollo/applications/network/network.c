@@ -45,6 +45,11 @@ int net_check_connect(void)
 {
 	sNetPush *net = net_cfg_get();
 	int ret = net->en;
+
+	net->en = 1;
+	sprintf(net->url, "192.168.1.215");
+	net->port = 8080;
+
 	if(ret > 0) {
 		switch(net->en) {
 		case Udp: ret = udp_client_connected(); break;
