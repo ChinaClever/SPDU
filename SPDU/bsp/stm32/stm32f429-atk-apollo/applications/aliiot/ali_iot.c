@@ -180,11 +180,11 @@ int user_post_property(int devid, char *property_payload)
 	return res;
 }
 
-void user_post_event(int devid)
+void user_post_event(int devid, char *event_id, char *event_payload)
 {
 	int res = 0;
-	char *event_id = "Error";
-	char *event_payload = "{\"ErrorCode\": 1}";
+	//	char *event_id = "Error";
+	//	char *event_payload = "{\"ErrorCode\": 1}";
 	ali_user_ctx_t *user_ctx = ali_user_get_ctx();
 
 	res = IOT_Linkkit_TriggerEvent(devid, event_id, strlen(event_id),
@@ -404,8 +404,8 @@ int ali_subdev_connect(int id)
 	sAli *ali = ali_cfg_get(id);
 	if(ali->en && user_master_dev_available()) {
 		if(ali->iot_devid < 1) {
-		//ali_set_subdevArr(id, ali);    //////==============
-		ali->iot_devid = ali_subdev_add(id-1);
+			//ali_set_subdevArr(id, ali);    //////==============
+			ali->iot_devid = ali_subdev_add(id-1);
 		}
 	} else {
 		ali_subdev_disconnect(ali);
@@ -414,16 +414,22 @@ int ali_subdev_connect(int id)
 	return ali->iot_devid;
 }
 
-int ali_mqtt_pub(int id, char *msg)
+int ali_mqtt_pubid(int id)
 {
 	int ret = -1;
 	if(id > EXAMPLE_SUBDEV_ADD_NUM) return ret;
-
 	if(user_master_dev_available()) {
-		int devid = ali_subdev_connect(id);
-		if(devid > 0) {
-			ret = user_post_property(devid, msg);
-		}
+		ret = ali_subdev_connect(id);
+	}
+
+	return ret;
+}
+
+int ali_mqtt_pub(int id, char *msg)
+{
+	int ret = ali_mqtt_pubid(id);
+	if(ret > 0) {
+		ret = user_post_property(ret, msg);
 	}
 
 	return ret;
@@ -480,7 +486,7 @@ int ali_master_connect()
 			//ali_set_master(ali);   ///=============
 			IOT_SetLogLevel(IOT_LOG_ERROR); //IOT_LOG_DEBUG
 			ret = ali_master_init();
-			if(ret>0){sleep(1); rt_kprintf("ali_master_connect ok\n");};
+			if(ret>0){sleep(5); rt_kprintf("ali_master_connect ok\n");};
 		}
 	} else {
 		ret = user_master_dev_available();
@@ -490,6 +496,31 @@ int ali_master_connect()
 	return ret;
 }
 
+int ali_event_alarm(int id, int code)
+{
+	int ret = ali_mqtt_pubid(id);
+	if(ret > 0) {
+		 char *event_id = "Alarm";
+		 char event_payload[32];
+		 sprintf(event_payload, "{\"AlarmCode\": %d}", code);
+		 user_post_event(ret, event_id, event_payload);
+	}
+
+	return ret;
+}
+
+int ali_event_error(int id, int code)
+{
+	int ret = ali_mqtt_pubid(id);
+	if(ret > 0) {
+		 char *event_id = "Error";
+		 char event_payload[32];
+		 sprintf(event_payload, "{\"ErrorCode\": %d}", code);
+		 user_post_event(ret, event_id, event_payload);
+	}
+
+	return ret;
+}
 
 #endif
 

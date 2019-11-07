@@ -49,16 +49,13 @@ void json_dataUnit(const char *str,int i, sDataUnit *unit, double rate, cJSON *j
 	char prefix[24]={0}, string[24]={0};
 
 	sprintf(prefix, "%s_value", str);
-	sprintf(string, "%.1f", unit->value[i]/rate);
-	cJSON_AddStringToObject(json, prefix, string);
+	cJSON_AddNumberToObject(json, prefix, unit->value[i]/rate);
 
 	sprintf(prefix, "%s_min", str);
-	sprintf(string, "%.1f", unit->min[i]/rate);
-	cJSON_AddStringToObject(json, prefix, string);
+	cJSON_AddNumberToObject(json, prefix, unit->min[i]/rate);
 
 	sprintf(prefix, "%s_max", str);
-	sprintf(string, "%.1f", unit->max[i]/rate);
-	cJSON_AddStringToObject(json, prefix, string);
+	cJSON_AddNumberToObject(json, prefix, unit->max[i]/rate);
 }
 
 int json_objDataById(int i, sObjData *ObjData, cJSON *jsonArray)
@@ -76,16 +73,14 @@ int json_objDataById(int i, sObjData *ObjData, cJSON *jsonArray)
 		json_dataUnit("cur", i, &(ObjData->cur), COM_RATE_CUR, subObj);
 
 		double value = ObjData->pow[i] / COM_RATE_POW;
-		sprintf(string, "%.1f", value);
-		cJSON_AddStringToObject(subObj, "pow", string);
+		cJSON_AddNumberToObject(subObj, "pow", value);
 
 		value = ObjData->ele[i] / COM_RATE_ELE;
-		sprintf(string, "%.1f", value);
-		cJSON_AddStringToObject(subObj, "ele", string);
+		cJSON_AddNumberToObject(subObj, "ele", value);
 
+		if(ObjData->pf[i] > 99) ObjData->pf[i]= 99;
 		value = ObjData->pf[i] / COM_RATE_PF;
-		sprintf(string, "%.2f", value);
-		cJSON_AddStringToObject(subObj, "PF", string);
+		cJSON_AddNumberToObject(subObj, "pf", value);
 		cJSON_AddNumberToObject(subObj, "switch", ObjData->sw[i]);
 
 		cJSON_AddItemToArray(jsonArray,subObj);

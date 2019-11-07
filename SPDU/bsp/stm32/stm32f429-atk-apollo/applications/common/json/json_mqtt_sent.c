@@ -38,9 +38,11 @@ char *json_mqtt_build(short id, short line)
 	json_head(json);
 	json_pduInfo(packet, json);
 
+	int ret = 0;
 	sDevData *devData = &(packet->data);
-	int ret = json_mqtt_objData_oneLine(line, "line", &(devData->line), json);
-	if(line == 3) { // 第一次传输，传输第一相和环境数据
+	if(line < 3) {
+		ret = json_mqtt_objData_oneLine(line, "line", &(devData->line), json);
+	}else if(line == 3) { // 第一次传输，传输第一相和环境数据
 		ret = json_envs(&(devData->env), json);
 	}
 

@@ -20,7 +20,6 @@ void json_pduInfo(sDataPacket *packet, cJSON *json);
 int json_envs(sEnvData *ObjData, cJSON *json);
 int json_objDataById(int i, sObjData *ObjData, cJSON *jsonArray);
 
-
 // 返回Buf 需释放 free(buf) ，不然会内存泻
 char *json_build(short id);
 boolean json_analysis(char *str);

@@ -23,50 +23,45 @@
 
 void json_iot_unit(const char *str,int i, sDataUnit *unit, double rate, cJSON *json)
 {
-	char id=i+1, prefix[24]={0}, string[24]={0};
+	char id=i+1, prefix[24]={0};
 
 	sprintf(prefix, "%s_value_%d", str, id);
-	sprintf(string, "%f", unit->value[i]/rate);
-	cJSON_AddStringToObject(json, prefix, string);
+	cJSON_AddNumberToObject(json, prefix, unit->value[i]/rate);
 
 	sprintf(prefix, "%s_min_%d", str, id);
-	sprintf(string, "%f", unit->min[i]/rate);
-	cJSON_AddStringToObject(json, prefix, string);
+	cJSON_AddNumberToObject(json, prefix, unit->min[i]/rate);
 
 	sprintf(prefix, "%s_max_%d", str, id);
-	sprintf(string, "%f", unit->max[i]/rate);
-	cJSON_AddStringToObject(json, prefix, string);
+	cJSON_AddNumberToObject(json, prefix, unit->max[i]/rate);
 }
 
 
 //  以下函数用于MQTT的JSON格式
 int json_iot_objData(const char *str, sObjData *ObjData, cJSON *obj)
 {
-	char key[32]={0}, string[24]={0};
+	char key[32]={0};
 	uchar i, num = ObjData->size;
 
 	for(i=0; i<num; ++i) {
 		sprintf(key, "%s_vol", str);
 		//if(ObjData->vol.value[i])
-		json_iot_unit(key, i, &(ObjData->vol), COM_RATE_VOL, obj);
+		json_iot_unit(key, i, &(ObjData->vol), 1, obj);
 
 		sprintf(key, "%s_cur", str);
 		json_iot_unit(key, i, &(ObjData->cur), COM_RATE_CUR, obj);
 
 		double value = ObjData->pow[i] / COM_RATE_POW;
-		sprintf(string, "%f", value);
 		sprintf(key, "%s_pow_%d", str, i+1);
-		cJSON_AddStringToObject(obj, key, string);
+		cJSON_AddNumberToObject(obj, key, value);
 
 		value = ObjData->ele[i] / COM_RATE_ELE;
-		sprintf(string, "%f", value);
 		sprintf(key, "%s_ele_%d", str, i+1);
-		cJSON_AddStringToObject(obj, key, string);
+		cJSON_AddNumberToObject(obj, key, value);
 
+		if(ObjData->pf[i]>99)ObjData->pf[i]=99;
 		value = ObjData->pf[i] / COM_RATE_PF;
-		sprintf(string, "%.2f", value);
 		sprintf(key, "%s_pf_%d", str, i+1);
-		cJSON_AddStringToObject(obj, key, string);
+		cJSON_AddNumberToObject(obj, key, value);
 
 		sprintf(key, "%s_sw_%d", str, i+1);
 		cJSON_AddNumberToObject(obj, key, ObjData->sw[i]);
@@ -96,7 +91,7 @@ char *json_iot_bulid(ushort id)
 	if(packet->offLine > 0) {
 		cJSON *json = cJSON_CreateObject();
 		sDevData *devData = &(packet->data);
-		json_objData("line", &(devData->line), json);
+		json_iot_objData("line", &(devData->line), json);
 		json_iot_envData(&(devData->env), json);
 
 		buf = cJSON_PrintUnformatted(json); //将json结构格式化到缓冲区
