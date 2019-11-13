@@ -425,16 +425,6 @@ int ali_mqtt_pubid(int id)
 	return ret;
 }
 
-int ali_mqtt_pub(int id, char *msg)
-{
-	int ret = ali_mqtt_pubid(id);
-	if(ret > 0) {
-		ret = user_post_property(ret, msg);
-	}
-
-	return ret;
-}
-
 void ali_set_master(sAli *ali)
 {
 	if(ali->id == 0) {
@@ -470,11 +460,27 @@ int ali_quit()
 	IOT_Linkkit_Close(user_ctx->master_devid);
 	HAL_ThreadDelete(user_ctx->g_user_dispatch_thread);
 
+	user_ctx->cloud_connected =0;
+	user_ctx->master_initialized = 0;
 	IOT_DumpMemoryStats(IOT_LOG_DEBUG);
 	IOT_SetLogLevel(IOT_LOG_NONE);
 
 	return 0;
 }
+
+
+int ali_mqtt_pub(int id, char *msg)
+{
+	int ret = ali_mqtt_pubid(id);
+	if(ret > 0) {
+		ret = user_post_property(ret, msg);
+	} else {
+		ali_quit();
+	}
+
+	return ret;
+}
+
 
 int ali_master_connect()
 {
@@ -484,7 +490,7 @@ int ali_master_connect()
 		ret = user_master_dev_available();
 		if(!ret) {
 			//ali_set_master(ali);   ///=============
-			IOT_SetLogLevel(IOT_LOG_ERROR); //IOT_LOG_DEBUG
+			IOT_SetLogLevel(IOT_LOG_DEBUG); //IOT_LOG_DEBUG
 			ret = ali_master_init();
 			if(ret>0){sleep(5); rt_kprintf("ali_master_connect ok\n");};
 		}
