@@ -43,7 +43,7 @@ static char DEVICE_SECRET[IOTX_DEVICE_SECRET_LEN + 1] = {0};
 #define USER_EXAMPLE_YIELD_TIMEOUT_MS (200)
 
 void HAL_Printf(const char *fmt, ...);
-#define EXAMPLE_TRACE(...) \
+#define ALI_TRACE(...) \
 		do { \
 			HAL_Printf("\033[1;32;40m%s.%d: ", __func__, __LINE__); \
 			HAL_Printf(__VA_ARGS__); \
@@ -93,7 +93,7 @@ static int user_connected_event_handler(void)
 {
 	ali_user_ctx_t *user_ctx = ali_user_get_ctx();
 
-	EXAMPLE_TRACE("Cloud Connected");
+	ALI_TRACE("Cloud Connected");
 	user_ctx->cloud_connected = 1;
 
 	return 0;
@@ -103,7 +103,7 @@ static int user_disconnected_event_handler(void)
 {
 	ali_user_ctx_t *user_ctx = ali_user_get_ctx();
 
-	EXAMPLE_TRACE("Cloud Disconnected");
+	ALI_TRACE("Cloud Disconnected");
 	user_ctx->cloud_connected = 0;
 
 	return 0;
@@ -114,11 +114,11 @@ static int user_property_set_event_handler(const int devid, const char *request,
 {
 	int res = 0;
 	ali_user_ctx_t *user_ctx = ali_user_get_ctx();
-	EXAMPLE_TRACE("Property Set Received, Devid: %d, Request: %s", devid, request);
+	ALI_TRACE("Property Set Received, Devid: %d, Request: %s", devid, request);
 
 	res = IOT_Linkkit_Report(devid, ITM_MSG_POST_PROPERTY,
 			(unsigned char *)request, request_len);
-	EXAMPLE_TRACE("Post Property Message ID: %d", res);
+	ALI_TRACE("Post Property Message ID: %d", res);
 
 	int id = ali_cfg_getByIot(devid);
 	json_iot_analysis(devid, request);
@@ -133,7 +133,7 @@ static int user_report_reply_event_handler(const int devid, const int msgid, con
 	const char *reply_value = (reply == NULL) ? ("NULL") : (reply);
 	const int reply_value_len = (reply_len == 0) ? (strlen("NULL")) : (reply_len);
 
-	EXAMPLE_TRACE("Message Post Reply Received, Devid: %d, Message ID: %d, Code: %d, Reply: %.*s", devid, msgid, code,
+	ALI_TRACE("Message Post Reply Received, Devid: %d, Message ID: %d, Code: %d, Reply: %.*s", devid, msgid, code,
 			reply_value_len,
 			reply_value);
 	return 0;
@@ -142,7 +142,7 @@ static int user_report_reply_event_handler(const int devid, const int msgid, con
 
 static int user_timestamp_reply_event_handler(const char *timestamp)
 {
-	EXAMPLE_TRACE("Current Timestamp: %s", timestamp);
+	ALI_TRACE("Current Timestamp: %s", timestamp);
 
 	return 0;
 }
@@ -150,7 +150,7 @@ static int user_timestamp_reply_event_handler(const char *timestamp)
 static int user_initialized(const int devid)
 {
 	ali_user_ctx_t *user_ctx = ali_user_get_ctx();
-	EXAMPLE_TRACE("Device Initialized, Devid: %d", devid);
+	ALI_TRACE("Device Initialized, Devid: %d", devid);
 
 	if (user_ctx->master_devid == devid) {
 		user_ctx->master_initialized = 1;
@@ -179,7 +179,7 @@ int user_post_property(int devid, char *property_payload)
 
 	int res = IOT_Linkkit_Report(devid, ITM_MSG_POST_PROPERTY,
 			(unsigned char *)property_payload, strlen(property_payload));
-	EXAMPLE_TRACE("Post Property Message ID: %d", res);
+	ALI_TRACE("Post Property Message ID: %d", res);
 	return res;
 }
 
@@ -192,7 +192,7 @@ void user_post_event(int devid, char *event_id, char *event_payload)
 
 	res = IOT_Linkkit_TriggerEvent(devid, event_id, strlen(event_id),
 			event_payload, strlen(event_payload));
-	EXAMPLE_TRACE("Post Event Message ID: %d", res);
+	ALI_TRACE("Post Event Message ID: %d", res);
 }
 
 
@@ -204,7 +204,7 @@ void user_deviceinfo_update(void)
 
 	res = IOT_Linkkit_Report(user_ctx->master_devid, ITM_MSG_DEVICEINFO_UPDATE,
 			(unsigned char *)device_info_update, strlen(device_info_update));
-	EXAMPLE_TRACE("Device Info Update Message ID: %d", res);
+	ALI_TRACE("Device Info Update Message ID: %d", res);
 }
 
 
@@ -216,7 +216,7 @@ void user_deviceinfo_delete(void)
 
 	res = IOT_Linkkit_Report(user_ctx->master_devid, ITM_MSG_DEVICEINFO_DELETE,
 			(unsigned char *)device_info_delete, strlen(device_info_delete));
-	EXAMPLE_TRACE("Device Info Delete Message ID: %d", res);
+	ALI_TRACE("Device Info Delete Message ID: %d", res);
 }
 
 
@@ -235,31 +235,31 @@ static int ali_add_subdev(iotx_linkkit_dev_meta_info_t *meta_info)
 	int res = -1, devid = -1;
 	devid = IOT_Linkkit_Open(IOTX_LINKKIT_DEV_TYPE_SLAVE, meta_info);
 	if (devid == FAIL_RETURN) {
-		EXAMPLE_TRACE("subdev open Failed\n");
+		ALI_TRACE("subdev open Failed\n");
 		return FAIL_RETURN;
 	}
-	EXAMPLE_TRACE("subdev open susseed, devid = %d\n", devid);
+	ALI_TRACE("subdev open susseed, devid = %d\n", devid);
 
 	res = IOT_Linkkit_Connect(devid);
 	if (res == FAIL_RETURN) {
-		EXAMPLE_TRACE("subdev connect Failed\n");
+		ALI_TRACE("subdev connect Failed\n");
 		return res;
 	}
-	EXAMPLE_TRACE("subdev connect success: devid = %d\n", devid);
+	ALI_TRACE("subdev connect success: devid = %d\n", devid);
 
 	res = IOT_Linkkit_Report(devid, ITM_MSG_LOGIN, NULL, 0);
 	if (res == FAIL_RETURN) {
-		EXAMPLE_TRACE("subdev login Failed\n");
+		ALI_TRACE("subdev login Failed\n");
 		return res;
 	}
-	EXAMPLE_TRACE("subdev login success: devid = %d\n", devid);
+	ALI_TRACE("subdev login success: devid = %d\n", devid);
 	return devid;
 }
 
 int user_permit_join_event_handler(const char *product_key, const int time)
 {
 	ali_user_ctx_t *user_ctx = ali_user_get_ctx();
-	EXAMPLE_TRACE("Product Key: %s, Time: %d", product_key, time);
+	ALI_TRACE("Product Key: %s, Time: %d", product_key, time);
 	user_ctx->permit_join = 1;
 
 	return 0;
@@ -308,7 +308,7 @@ int ali_master_init()
 	/* Create Master Device Resources */
 	user_ctx->master_devid = IOT_Linkkit_Open(IOTX_LINKKIT_DEV_TYPE_MASTER, &master_meta_info);
 	if (user_ctx->master_devid < 0) {
-		EXAMPLE_TRACE("IOT_Linkkit_Open Failed\n");
+		ALI_TRACE("IOT_Linkkit_Open Failed\n");
 		return -1;
 	}
 
@@ -327,14 +327,14 @@ int ali_master_init()
 	/* Start Connect Aliyun Server */
 	int res = IOT_Linkkit_Connect(user_ctx->master_devid);
 	if (res < 0) {
-		EXAMPLE_TRACE("IOT_Linkkit_Connect failed, retry after 15s...\n");
+		ALI_TRACE("IOT_Linkkit_Connect failed, retry after 15s...\n");
 		return res;
 	}
 
 	user_ctx->g_user_dispatch_thread_running = 1;
 	res = HAL_ThreadCreate(&user_ctx->g_user_dispatch_thread, user_dispatch_yield, NULL, NULL, NULL);
 	if (res < 0) {
-		EXAMPLE_TRACE("HAL_ThreadCreate Failed\n");
+		ALI_TRACE("HAL_ThreadCreate Failed\n");
 		IOT_Linkkit_Close(user_ctx->master_devid);
 		return -1;
 	}
@@ -356,9 +356,9 @@ int ali_subdev_add(int id)
 			/* Add next subdev */
 			devid = ali_add_subdev((iotx_linkkit_dev_meta_info_t *)&subdevArr[user_ctx->subdev_index]);
 			if (devid >= SUCCESS_RETURN) {
-				EXAMPLE_TRACE("subdev %s add succeed", subdevArr[user_ctx->subdev_index].device_name);
+				ALI_TRACE("subdev %s add succeed", subdevArr[user_ctx->subdev_index].device_name);
 			} else {
-				EXAMPLE_TRACE("subdev %s add failed", subdevArr[user_ctx->subdev_index].device_name);
+				ALI_TRACE("subdev %s add failed", subdevArr[user_ctx->subdev_index].device_name);
 			}
 			user_ctx->subdev_index++;
 			user_ctx->permit_join = 0;
@@ -372,10 +372,10 @@ int ali_subdev_remove(int devid)
 {
 	int res = IOT_Linkkit_Report(devid, ITM_MSG_LOGOUT, NULL, 0);
 	if (res == FAIL_RETURN) {
-		EXAMPLE_TRACE("subdev logout Failed\n");
+		ALI_TRACE("subdev logout Failed\n");
 		return res;
 	}
-	EXAMPLE_TRACE("subdev logout success: devid = %d\n", devid);
+	ALI_TRACE("subdev logout success: devid = %d\n", devid);
 
 	return res;
 }
