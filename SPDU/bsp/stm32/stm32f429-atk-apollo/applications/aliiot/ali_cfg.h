@@ -24,6 +24,6 @@ typedef struct sAlis {
 }sAlis;
 
 sAli *ali_cfg_get(int id);
-
+int ali_cfg_getByIot(const int id);
 
 #endif /* BSP_STM32_STM32F407_ATK_EXPLORER_APPLICATIONS_ALIIOT_ALI_CFG_H_ */

@@ -9,7 +9,7 @@
 
 
 
-boolean json_analysis_params(cJSON *json)
+boolean json_analysis_params(const int id, cJSON *json)
 {
 	boolean ret = true;
 	cJSON *obj_node = cJSON_GetObjectItem(json,"params");
@@ -29,7 +29,7 @@ boolean json_analysis_params(cJSON *json)
 	return ret;
 }
 
-boolean json_iot_analysis(const char *str)
+boolean json_iot_analysis(const int id, const char *str)
 {
 	cJSON *json = cJSON_Parse(str);  //从缓冲区中解析出JSON结构
 	boolean ret = json_analysis_params(json);

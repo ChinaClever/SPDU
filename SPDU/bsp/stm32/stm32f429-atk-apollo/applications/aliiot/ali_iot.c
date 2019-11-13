@@ -120,6 +120,9 @@ static int user_property_set_event_handler(const int devid, const char *request,
 			(unsigned char *)request, request_len);
 	EXAMPLE_TRACE("Post Property Message ID: %d", res);
 
+	int id = ali_cfg_getByIot(devid);
+	json_iot_analysis(devid, request);
+
 	return 0;
 }
 
@@ -449,6 +452,9 @@ void ali_subdev_quit()
 	for(i=1; i<=DEV_NUM; ++i) {
 		int id = ali_subdev_connect(i);
 		if(id > 0) ali_subdev_remove(id);
+
+		sAli *ali = ali_cfg_get(i);
+		ali->iot_devid = -1;
 	}
 }
 
@@ -506,10 +512,10 @@ int ali_event_alarm(int id, int code)
 {
 	int ret = ali_mqtt_pubid(id);
 	if(ret > 0) {
-		 char *event_id = "Alarm";
-		 char event_payload[32];
-		 sprintf(event_payload, "{\"AlarmCode\": %d}", code);
-		 user_post_event(ret, event_id, event_payload);
+		char *event_id = "Alarm";
+		char event_payload[32];
+		sprintf(event_payload, "{\"AlarmCode\": %d}", code);
+		user_post_event(ret, event_id, event_payload);
 	}
 
 	return ret;
@@ -519,10 +525,10 @@ int ali_event_error(int id, int code)
 {
 	int ret = ali_mqtt_pubid(id);
 	if(ret > 0) {
-		 char *event_id = "Error";
-		 char event_payload[32];
-		 sprintf(event_payload, "{\"ErrorCode\": %d}", code);
-		 user_post_event(ret, event_id, event_payload);
+		char *event_id = "Error";
+		char event_payload[32];
+		sprintf(event_payload, "{\"ErrorCode\": %d}", code);
+		user_post_event(ret, event_id, event_payload);
 	}
 
 	return ret;

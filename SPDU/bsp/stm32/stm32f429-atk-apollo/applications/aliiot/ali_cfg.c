@@ -82,3 +82,14 @@ sAli *ali_cfg_get(int id)
 	return &(cfg->ali[id]);
 }
 
+int ali_cfg_getByIot(const int id)
+{
+	int i;
+	sAli *ali = nullptr;
+	for(i=0; i<=DEV_NUM; ++i) {
+		if(ali->iot_devid == id) {
+			return i;
+		}
+	}
+	return -1;
+}
