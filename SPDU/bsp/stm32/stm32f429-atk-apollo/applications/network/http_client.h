@@ -10,7 +10,7 @@
 #include "tcp_client.h"
 
 int http_get(char *uri);
-int http_post(char *uri, char *post_data);
+int http_post(char *uri, char *post_data, char *head);
 
 
 #endif /* BSP_STM32_STM32F407_ATK_EXPLORER_APPLICATIONS_NETWORK_HTTP_CLIENT_H_ */

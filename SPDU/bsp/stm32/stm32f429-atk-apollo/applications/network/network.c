@@ -72,7 +72,7 @@ int net_check_connect(void)
 void net_push_http(char *json)
 {
 	struct sNetPush *net = net_cfg_get();
-	int ret = http_post(net->url, json);
+	int ret = http_post(net->url, json, nullptr);
 	if(ret <= 0) {
 		net_connect_err(net);
 	}

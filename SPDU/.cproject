@@ -3,23 +3,23 @@
     	
     <storageModule moduleId="org.eclipse.cdt.core.settings">
         		
-        <cconfiguration id="0.967304560">
+        <cconfiguration id="org.eclipse.linuxtools.cdt.autotools.core.toolChain.1737635807">
             			
-            <storageModule buildSystemId="org.eclipse.cdt.managedbuilder.core.configurationDataProvider" id="0.967304560" moduleId="org.eclipse.cdt.core.settings" name="Default">
+            <storageModule buildSystemId="org.eclipse.cdt.managedbuilder.core.configurationDataProvider" id="org.eclipse.linuxtools.cdt.autotools.core.toolChain.1737635807" moduleId="org.eclipse.cdt.core.settings" name="Build (GNU)">
                 				
                 <externalSettings/>
                 				
                 <extensions>
                     					
-                    <extension id="org.eclipse.cdt.core.GASErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+                    <extension id="org.eclipse.cdt.core.MachO64" point="org.eclipse.cdt.core.BinaryParser"/>
                     					
-                    <extension id="org.eclipse.cdt.core.GmakeErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+                    <extension id="org.eclipse.cdt.core.Cygwin_PE" point="org.eclipse.cdt.core.BinaryParser"/>
                     					
-                    <extension id="org.eclipse.cdt.core.GLDErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+                    <extension id="org.eclipse.cdt.core.PE" point="org.eclipse.cdt.core.BinaryParser"/>
                     					
-                    <extension id="org.eclipse.cdt.core.VCErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
+                    <extension id="org.eclipse.cdt.core.GNU_ELF" point="org.eclipse.cdt.core.BinaryParser"/>
                     					
-                    <extension id="org.eclipse.cdt.core.CWDLocator" point="org.eclipse.cdt.core.ErrorParser"/>
+                    <extension id="org.eclipse.cdt.core.ELF" point="org.eclipse.cdt.core.BinaryParser"/>
                     					
                     <extension id="org.eclipse.cdt.core.GCCErrorParser" point="org.eclipse.cdt.core.ErrorParser"/>
                     				
@@ -29,35 +29,23 @@
             			
             <storageModule moduleId="cdtBuildSystem" version="4.0.0">
                 				
-                <configuration buildProperties="" description="" id="0.967304560" name="Default" optionalBuildProperties="" parent="org.eclipse.cdt.build.core.prefbase.cfg">
+                <configuration buildProperties="" id="org.eclipse.linuxtools.cdt.autotools.core.toolChain.1737635807" name="Build (GNU)" parent="org.eclipse.cdt.build.core.emptycfg">
                     					
-                    <folderInfo id="0.967304560." name="/" resourcePath="">
+                    <folderInfo id="org.eclipse.linuxtools.cdt.autotools.core.toolChain.1737635807.1956099792" name="/" resourcePath="">
                         						
-                        <toolChain id="org.eclipse.cdt.build.core.prefbase.toolchain.59575298" name="No ToolChain" resourceTypeBasedDiscovery="false" superClass="org.eclipse.cdt.build.core.prefbase.toolchain">
+                        <toolChain id="org.eclipse.linuxtools.cdt.autotools.core.toolChain.1212475473" name="GNU Autotools Toolchain" superClass="org.eclipse.linuxtools.cdt.autotools.core.toolChain">
                             							
-                            <targetPlatform id="org.eclipse.cdt.build.core.prefbase.toolchain.59575298.1066609813" name=""/>
+                            <targetPlatform id="org.eclipse.linuxtools.cdt.autotools.core.toolchain.targetPlatform.873238559" isAbstract="false" name="GNU Autotools Target Platform" superClass="org.eclipse.linuxtools.cdt.autotools.core.toolchain.targetPlatform"/>
                             							
-                            <builder id="org.eclipse.cdt.build.core.settings.default.builder.1199487752" keepEnvironmentInBuildfile="false" managedBuildOn="false" name="Gnu Make Builder" superClass="org.eclipse.cdt.build.core.settings.default.builder"/>
+                            <builder id="org.eclipse.linuxtools.cdt.autotools.core.toolchain.builder.36426910" managedBuildOn="false" name="Autotools Makefile Generator.Build (GNU)" superClass="org.eclipse.linuxtools.cdt.autotools.core.toolchain.builder"/>
                             							
-                            <tool id="org.eclipse.cdt.build.core.settings.holder.libs.1757374412" name="holder for library settings" superClass="org.eclipse.cdt.build.core.settings.holder.libs"/>
+                            <tool id="org.eclipse.linuxtools.cdt.autotools.core.gnu.toolchain.tool.configure.962175595" name="configure" superClass="org.eclipse.linuxtools.cdt.autotools.core.gnu.toolchain.tool.configure"/>
                             							
-                            <tool id="org.eclipse.cdt.build.core.settings.holder.1155933387" name="Assembly" superClass="org.eclipse.cdt.build.core.settings.holder">
-                                								
-                                <inputType id="org.eclipse.cdt.build.core.settings.holder.inType.997286857" languageId="org.eclipse.cdt.core.assembly" languageName="Assembly" sourceContentType="org.eclipse.cdt.core.asmSource" superClass="org.eclipse.cdt.build.core.settings.holder.inType"/>
-                                							
-                            </tool>
+                            <tool id="org.eclipse.linuxtools.cdt.autotools.core.toolchain.tool.autogen.1265146485" name="autogen.sh" superClass="org.eclipse.linuxtools.cdt.autotools.core.toolchain.tool.autogen"/>
                             							
-                            <tool id="org.eclipse.cdt.build.core.settings.holder.1982727172" name="GNU C++" superClass="org.eclipse.cdt.build.core.settings.holder">
-                                								
-                                <inputType id="org.eclipse.cdt.build.core.settings.holder.inType.1761661600" languageId="org.eclipse.cdt.core.g++" languageName="GNU C++" sourceContentType="org.eclipse.cdt.core.cxxSource,org.eclipse.cdt.core.cxxHeader" superClass="org.eclipse.cdt.build.core.settings.holder.inType"/>
-                                							
-                            </tool>
+                            <tool id="org.eclipse.linuxtools.cdt.autotools.core.toolchain.tool.gcc.663378876" name="GCC C Compiler" superClass="org.eclipse.linuxtools.cdt.autotools.core.toolchain.tool.gcc"/>
                             							
-                            <tool id="org.eclipse.cdt.build.core.settings.holder.1124413077" name="GNU C" superClass="org.eclipse.cdt.build.core.settings.holder">
-                                								
-                                <inputType id="org.eclipse.cdt.build.core.settings.holder.inType.1818088655" languageId="org.eclipse.cdt.core.gcc" languageName="GNU C" sourceContentType="org.eclipse.cdt.core.cSource,org.eclipse.cdt.core.cHeader" superClass="org.eclipse.cdt.build.core.settings.holder.inType"/>
-                                							
-                            </tool>
+                            <tool id="org.eclipse.linuxtools.cdt.autotools.core.toolchain.tool.gpp.1777865832" name="GCC C++ Compiler" superClass="org.eclipse.linuxtools.cdt.autotools.core.toolchain.tool.gpp"/>
                             						
                         </toolChain>
                         					
@@ -73,12 +61,6 @@
         	
     </storageModule>
     	
-    <storageModule moduleId="cdtBuildSystem" version="4.0.0">
-        		
-        <project id="SPDU.null.2064679761" name="SPDU"/>
-        	
-    </storageModule>
-    	
     <storageModule moduleId="scannerConfiguration">
         		
         <autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
@@ -88,6 +70,12 @@
             <autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId=""/>
             		
         </scannerConfigBuildInfo>
+        	
+    </storageModule>
+    	
+    <storageModule moduleId="cdtBuildSystem" version="4.0.0">
+        		
+        <project id="SPDU.null.2023068412" name="SPDU"/>
         	
     </storageModule>
     	

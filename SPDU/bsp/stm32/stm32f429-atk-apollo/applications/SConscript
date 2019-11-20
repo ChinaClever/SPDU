@@ -56,6 +56,9 @@ CPPPATH += [cwd + '/web']
 src += Glob('rtu/*.c')
 CPPPATH += [cwd + '/rtu']
 
+src += Glob('dingtalk/*.c')
+CPPPATH += [cwd + '/dingtalk']
+
 group = DefineGroup('Applications', src, depend = [''], CPPPATH = CPPPATH)
 
 Return('group')

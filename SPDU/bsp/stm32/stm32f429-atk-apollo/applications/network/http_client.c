@@ -26,14 +26,18 @@ void http_post_resp(char *request)
 	if (request) web_free(request);
 }
 
-int http_post(char *uri, char *post_data)
+int http_post(char *uri, char *post_data, char *head)
 {
 	char *url = web_strdup(uri);
 	//char *url = web_strdup(POST_LOCAL_URI);
 	char *request=RT_NULL, *header=RT_NULL;
 
 	webclient_request_header_add(&header, "Content-Length: %d\r\n", strlen(post_data));
-	webclient_request_header_add(&header, "Content-Type: application/octet-stream\r\n");
+	if(head) {
+		webclient_request_header_add(&header, head);
+	} else {
+		webclient_request_header_add(&header, "Content-Type: application/octet-stream\r\n");
+	}
 	int ret = webclient_request(url, (const char *)header, post_data, (unsigned char **)&request);
 	if(ret < 0) {
 		rt_kprintf("webclient send post request failed.");
