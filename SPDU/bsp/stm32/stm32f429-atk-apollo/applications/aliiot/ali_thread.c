@@ -43,12 +43,6 @@ void ali_pub_task()
 	char *msg_pub = NULL; // "{\"Voltage\":223}";
 
 	sleep(10);
-	printf("~~~~~~~~~~~~~~~\n");
-	char *data = "this is text";
-	dt_talk(data);
-	printf("~~~~~~~~~~~~~~~\n");
-
-
 	while(1)
 	{
 		ret = ali_master_connect();
