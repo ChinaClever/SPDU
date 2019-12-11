@@ -11,9 +11,9 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdio.h>
-
 #include <netdb.h>
 #include <sys/socket.h> /* 使用BSD socket，需要包含sockets.h头文件 */
+#include <easyflash.h>
 
 typedef  unsigned char      boolean;     /* Boolean value type. */
 typedef  unsigned int  		uint;      /* Unsigned 32 bit value */

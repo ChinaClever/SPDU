@@ -75,7 +75,7 @@ sAli *ali_cfg_get(int id)
 			ali->id = i;
 			ali->iot_devid = -1;
 			ali_env_read(ali);
-			ali->en = 1;   ////////===========
+			ali->en = 0;   ////////===========
 		}
 	}
 

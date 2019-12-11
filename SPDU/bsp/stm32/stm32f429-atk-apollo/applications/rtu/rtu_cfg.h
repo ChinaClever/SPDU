@@ -43,8 +43,14 @@ typedef struct sRtu
 }sRtu;
 
 typedef struct sRtus {
+	uchar ac_dc; // 交直流标志
+	uchar portDevs; // 一个端口设备数据
+
 	sRtu rtu[UARTS_NUM+1];
 }sRtus;
+
+uchar rtu_cfg_ad(void);
+sRtus *rtus_cfg_get(void);
 
 sRtu *rtu_cfg_get(int id);
 sRtu *rtu_cfg_addr(uchar addr);

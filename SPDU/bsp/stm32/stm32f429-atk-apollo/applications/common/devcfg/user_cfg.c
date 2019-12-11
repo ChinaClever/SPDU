@@ -8,8 +8,8 @@
 
 void user_env_write(sUser *user)
 {
-	ef_set_env_blob("user_name", user->name, strlen(user->name));
-	ef_set_env_blob("user_pass", user->pass, strlen(user->pass));
+	ef_set_env("user_name", user->name);
+	ef_set_env("user_pass", user->pass);
 }
 
 void user_env_default(sUser *user)
@@ -21,9 +21,10 @@ void user_env_default(sUser *user)
 
 void user_env_read(sUser *user)
 {
-	int len = ef_get_env_blob("user_name", user->name, sizeof(user->name), NULL);
-	if(len) {
-		ef_get_env_blob("user_pass", user->pass, sizeof(user->pass), NULL);
+	char *res = ef_get_env("user_name");
+	if(res) {
+		strcpy(user->name, res);
+		ef_get_env("user_pass");strcpy(user->pass, res);
 	} else { // ¶ÁÈ¡Ê§°Ü£¬»Ö¸´Ä¬ÈÏÖµ
 		user_env_default(user);
 	}

@@ -11,7 +11,7 @@
 static void rtu_task(int id, sRtu *rtu, sRtuRecv *rtuRecv)
 {
 	rtuRecv->data = data_packet_get(id);
-	rtu->sentLen = rtu_cmdAc(1, rtu->sentBuf);
+	rtu->sentLen = rtu_cmdBuf(id, rtu->sentBuf);
 	if(rtuRecv->data->offLine > 0) rtuRecv->data->offLine--;
 
 	short rtn = rtu_trans(rtu);
@@ -70,13 +70,15 @@ static void rtu_thread_entry(void *arg)
 			rtu_task(i, rtu, &rtuRecv);
 			msleep(450);
 		}
+		msleep(50);
 	}
 }
 
 
 void rtu_thread_pool(void)
 {
-	char name[8];
+	rtus_cfg_get();
+	char name[8]={0};
 	uint i=0, num=UARTS_NUM;
 
 	for(i=0; i<num; ++i)

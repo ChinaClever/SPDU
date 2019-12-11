@@ -16,7 +16,7 @@ int rtu_setCmd(sRtuSetCmd *cmd)
 		sRtu *rtu= rtu_cfg_addr(cmd->addr);
 		list_t *list = rtu->cmds;
 		list_rpush(list, list_node_new(buf)); // 从尾部增加节点
-}
+	}
 
 	return packet->offLine;
 }
@@ -30,7 +30,6 @@ int rtu_getCmd(sRtu *rtu)
 	if(node) {
 		memcpy(rtu->sentBuf, node->val, ret);
 		list_remove(list, node);
-
 	} else {
 		ret = 0;
 	}

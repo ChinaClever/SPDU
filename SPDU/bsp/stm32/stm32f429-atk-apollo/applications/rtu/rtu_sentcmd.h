@@ -27,8 +27,7 @@ typedef struct sRtuSetCmd
     ushort value;
 }sRtuSetCmd;
 
-int rtu_cmdAc(uchar addr, uchar *buf);
-int rtu_cmdDc(uchar addr, uchar *buf);
+int rtu_cmdBuf(uchar addr, uchar *buf);
 int rtu_sentCmd(sRtuSetCmd *cmd, uchar *buf);
 
 #endif /* BSP_STM32_STM32F429_ATK_APOLLO_APPLICATIONS_UART_RTU_SENT_H_ */

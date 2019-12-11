@@ -96,15 +96,29 @@ static int rtu_sendCmd(uchar addr, uchar *buf, uchar len)
     return rtu_sent_packet(&msg, buf);
 }
 
-int rtu_cmdAc(uchar addr, uchar *buf)
+static int rtu_cmdAc(uchar addr, uchar *buf)
 {
 	return rtu_sendCmd(addr, buf, SI_RTU_AC_LEN);
 }
 
-int rtu_cmdDc(uchar addr, uchar *buf)
+static int rtu_cmdDc(uchar addr, uchar *buf)
 {
 	return rtu_sendCmd(addr, buf, SI_RTU_DC_LEN);
 }
+
+int rtu_cmdBuf(uchar addr, uchar *buf)
+{
+	int ret = 0;
+	if(rtu_cfg_ad()) {
+		ret = rtu_cmdDc(addr, buf);
+	} else {
+		ret = rtu_cmdAc(addr, buf);
+	}
+
+	return ret;
+}
+
+
 
 /**
   * 功　能：发送命令数据打包

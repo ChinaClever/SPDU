@@ -8,10 +8,10 @@
 
 void ip_env_write(sNetAddr *ip)
 {
-	ef_set_env_blob("ip_v4", ip->ip, strlen(ip->ip));
-	ef_set_env_blob("ip_mask", ip->mask, strlen(ip->mask));
-	ef_set_env_blob("ip_gw", ip->gw, strlen(ip->gw));
-	ef_set_env_blob("ip_dns", ip->dns, strlen(ip->dns));
+	ef_set_env("ip_v4", ip->ip);
+	ef_set_env("ip_mask", ip->mask);
+	ef_set_env("ip_gw", ip->gw);
+	ef_set_env("ip_dns", ip->dns);
 }
 
 void ip_env_default(sNetAddr *ip)
@@ -25,11 +25,12 @@ void ip_env_default(sNetAddr *ip)
 
 void ip_env_read(sNetAddr *ip)
 {
-	int len = ef_get_env_blob("ip_v4", ip->ip, sizeof(ip->ip), NULL);
-	if(len) {
-		ef_get_env_blob("ip_mask", ip->mask, sizeof(ip->mask), NULL);
-		ef_get_env_blob("ip_gw", ip->gw, sizeof(ip->gw), NULL);
-		ef_get_env_blob("ip_dns", ip->dns, sizeof(ip->dns), NULL);
+	char *res = ef_get_env("ip_v4");
+	if(res) {
+		strcpy(ip->ip, res);
+		ef_get_env("ip_mask"); strcpy(ip->mask, res);
+		ef_get_env("ip_gw");strcpy(ip->gw, res);
+		ef_get_env("ip_dns");strcpy(ip->dns, res);
 	} else { // ¶ÁÈ¡Ê§°Ü£¬»Ö¸´Ä¬ÈÏÖµ
 		ip_env_default(ip);
 	}

@@ -9,6 +9,7 @@
 #include "rtu_thread.h"
 #include "web_main.h"
 #include "dt_dingtalk.h"
+#include "iwdg.h"
 
 extern int manager_main();
 //extern void telnet_server(void);
@@ -25,12 +26,12 @@ void app_thread(void)
 	rtu_thread_pool();
 	manager_main();
 
-	sleep(5);
 //	char *data = "this is text";
 //	dt_talk(data);
 
 //	snmp_main();
 //	telnet_server();
-//	cpu_temp_get();
+	iwdg_thread();
+	cpu_temp_get();
 }
 

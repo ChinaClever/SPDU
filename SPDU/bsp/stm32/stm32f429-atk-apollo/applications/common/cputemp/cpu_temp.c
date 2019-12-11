@@ -8,7 +8,8 @@
 #include <rtdevice.h>
 
 #define ADC_DEV_NAME        "adc1"      /* ADC 设备名称 */
-#define ADC_DEV_CHANNEL     16           /* ADC 通道 */
+#define ADC_CH_TEMP  	18 		 	//通道18,内部温度传感器专用通道
+#define ADC_DEV_CHANNEL     ADC_CH_TEMP           /* ADC 通道 */
 static rt_adc_device_t adc_cpu_dev = NULL;
 
 
@@ -39,8 +40,8 @@ static int adc_temp_average(void)
 
 	for(t=0;t<times;t++)
 	{
-		temp_val += rt_adc_read(adc_cpu_dev, ADC_DEV_CHANNEL);
 		rt_thread_mdelay(5);
+		temp_val += rt_adc_read(adc_cpu_dev, ADC_DEV_CHANNEL);
 	}
 
 	return temp_val/times;
@@ -50,7 +51,10 @@ static int adc_temp_average(void)
 //返回值:温度值(扩大了100倍,单位:℃.)
 short cpu_temp_get(void)
 {
-	if(!adc_cpu_dev) adc_temp_init();
+	if(!adc_cpu_dev) {
+		adc_temp_init();
+		rt_thread_mdelay(100);
+	}
 
 	int adcx = adc_temp_average();	//读取通道16内部温度传感器通道,10次取平均
 	double temperate = (float)adcx*(3.3/4096);		//电压值
