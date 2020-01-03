@@ -29,8 +29,6 @@ CPPPATH += [cwd + '/common/devcfg']
 src += Glob('btn/*.c')
 CPPPATH += [cwd + '/btn']
 
-src += Glob('aliiot/*.c')
-CPPPATH += [cwd + '/aliiot']
 
 src += Glob('mqtt/*.c')
 CPPPATH += [cwd + '/mqtt']
@@ -58,6 +56,14 @@ CPPPATH += [cwd + '/rtu']
 
 src += Glob('dingtalk/*.c')
 CPPPATH += [cwd + '/dingtalk']
+
+src += Glob('upgrade/*.c')
+CPPPATH += [cwd + '/upgrade']
+
+if GetDepend('PKG_USING_ALI_IOTKIT'):
+	src += Glob('aliiot/*.c')
+	CPPPATH += [cwd + '/aliiot']
+
 
 group = DefineGroup('Applications', src, depend = [''], CPPPATH = CPPPATH)
 
