@@ -28,6 +28,7 @@ void http_post_resp(char *request)
 
 int http_post(char *uri, char *post_data, char *head)
 {
+	size_t resp_len = 0;
 	char *url = web_strdup(uri);
 	//char *url = web_strdup(POST_LOCAL_URI);
 	char *request=RT_NULL, *header=RT_NULL;
@@ -38,7 +39,7 @@ int http_post(char *uri, char *post_data, char *head)
 	} else {
 		webclient_request_header_add(&header, "Content-Type: application/octet-stream\r\n");
 	}
-	int ret = webclient_request(url, (const char *)header, post_data, (unsigned char **)&request);
+	int ret = webclient_request(url, (const char *)header, post_data, sizeof(post_data), (void **)&request, &resp_len);
 	if(ret < 0) {
 		rt_kprintf("webclient send post request failed.");
 		web_free(header);
@@ -72,11 +73,12 @@ void http_get_resp(char *request)
 
 int http_get(char *uri)
 {
+	size_t resp_len = 0;
 	char *request = RT_NULL;
 	char *url = web_strdup(uri);
 	//char *url = web_strdup(GET_LOCAL_URI);
 
-	int ret = webclient_request(url, RT_NULL, RT_NULL, (unsigned char **)&request);
+	int ret = webclient_request(url, RT_NULL, RT_NULL, 0, (void **)&request, &resp_len);
 	if (ret > 0) {
 		http_get_resp(request);
 		//json_analysis(request);

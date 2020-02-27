@@ -1,0 +1,269 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>devthresholds</title>
+
+<script type="text/javascript" src="ajax.js"></script>
+<script type="text/javascript">
+
+var devNum = 0; // 设备数量
+var lineNum = 0; // 相
+var devId = 1;
+
+function setThreshold(id, obj)
+{	
+	var e = document.getElementById('vol_min_'+id);
+	e.value = obj["vol_min"];
+	
+	e = document.getElementById('vol_max_'+id);
+	e.value = obj["vol_max"];
+
+	e = document.getElementById('cur_min_'+id);
+	e.value = obj["cur_min"];
+	
+	e = document.getElementById('cur_max_'+id);
+	e.value = obj["cur_max"];
+}
+
+// 设置背景色
+function setAlarmColor(obj, alarm) 
+{
+	var color = "#000000";
+	if(alarm == 1) color = "#FF0000";
+	obj.style.color = color;
+}
+
+// 以对像来设置一行定时数据  var obj = {id:1, en_1:2, open_1:3, close_1:4};
+function setValueByObj(id, obj)
+{
+	var e = document.getElementById('vol_'+id);
+	e.innerHTML = obj['vol'];
+	setAlarmColor(e, obj["vol_alarm"]);	
+	
+	e = document.getElementById('cur_'+id);
+	e.innerHTML = obj["cur"];
+	setAlarmColor(e, obj["cur_alarm"]);		
+
+	return en;
+}
+
+
+function updateValue(obj)
+{
+	var id = Number(obj.id);
+	setValueByObj(id, obj);
+}
+
+function updateThreshold(obj)
+{
+	var id = Number(obj.id);
+	setThreshold(id, obj);
+	updateValue(obj);	
+}
+
+
+function getDevID()
+{
+	if(devId > devNum) 
+		devId = 1;
+	return devId++;
+}
+
+
+function getThreshold()
+{
+	var id = getDevID();
+	var options = { url: 'getThresholds', 
+	  data: 'id={0}&line={1}'.format(id, lineNum), 	 	
+	  success: function(obj) {
+			updateThreshold(obj);			
+	  },
+	  fail: function(err) {	
+	  }
+	};	
+	ajaxRequest(options);
+}
+
+function getThresholds()
+{
+	for(var i=1; i<=devNum; ++i) {
+		setTimeout( function(){getThreshold();}, (i+1)*45);//延迟5000毫米	
+	}
+}
+
+
+function getValues()
+{
+	var id = getDevID();
+
+	var options = { url: 'getValues', 
+	  data: 'id={0}&line={1}'.format(id, lineNum), 	 	
+	  success: function(obj) {
+			updateValue(obj);			
+	  },
+	  fail: function(err) {	
+	  }
+	};	
+	ajaxRequest(options);
+}
+
+function updateStatus()
+{
+	for(var i=0; i<=devNum; ++i) {
+		setTimeout( function(){getValues();}, (i+1)*45);//延迟5000毫米	
+	}
+}
+
+
+// 增加一行表格
+function addtr(id)
+{
+	 var tab=document.getElementById('tab');
+	 var tradd=tab.insertRow(id);
+		 
+	if (id%2) tradd.style.background = "#F5F5F5";
+	tradd.align="center";
+	
+	var fma = {id:id};	
+	var html = '<td height="22px">{id}</td>' + 
+                '<td id="vol_{id}"> --- </td>' +
+                '<td> <input id="vol_min_{id}" type="number" style="width:50px"/> </td>' +
+                '<td> <input id="vol_max_{id}" type="number" style="width:50px"/> </td>' +
+                '<td id="cur_{id}"> --- </td>' +
+                '<td> <input id="cur_min_{id}" type="number" style="width:50px"/> </td>' +
+                '<td> <input id="cur_max_{id}" type="number" style="width:50px"/> </td>' +
+				'<td> <input type="button" value="提交" onClick="setSlave({id});"/> </td>'; 
+	 tradd.innerHTML=html.format(fma);  		
+}
+
+// 创建表格
+function createTab(num)
+{
+	devNum = Number(num);
+	for(var i=1; i<=Number(num); ++i) {
+		addtr(i);
+	}
+}
+
+
+// 获取输出位数量
+function getDevNum() 
+{
+	var options = { url: 'getDevNum', 
+	  data: 'num=0', 	
+	  success: function(obj) {
+			createTab(obj.num);			
+	  },
+	  fail: function(err) {	
+	  }
+	};	
+	ajaxRequest(options);
+}
+
+
+
+
+// 网页加载时执行函数	
+function pageload() 
+{	
+	getDevNum();	
+	setTimeout(function(){getThresholds();}, 100);//延迟5000毫米	
+	window.setInterval("updateStatus()",4250);
+
+	// 测试代码
+	// createTab(10);
+	//var arr = {id:5, vol:220,vol_alarm:0,vol_min:1,vol_max:2,cur:1, cur_alarm:1, cur_min:3,  cur_max:4};
+	//updateThreshold(arr); 
+}
+
+function isRealNum(val){
+    // isNaN()函数 把空串 空格 以及NUll 按照0来处理 所以先去除
+    if(val === "" || val ==null){
+        return false;
+    }
+    if(!isNaN(val)){
+        return true;
+    }else{
+        return false;
+    }
+}           
+
+function checkInput(id)
+{	
+	var min = document.getElementById('vol_min_'+id).value;
+	if (!isRealNum(min)) {
+		alert("电压最小值，输入有误!");	return false;
+	}
+
+	var max = document.getElementById('vol_max_'+id).value;
+	if (!isRealNum(max)) {
+		alert("电压最大值，输入有误!");	return false;
+	}
+	
+	if (min > max) {
+		alert("电压最小值大于电压最大值，请重新输入!");	return false;
+	}
+
+	 min = document.getElementById('cur_min_'+id).value;
+	if (!isRealNum(min)) {
+		alert("电流最小值，输入有误!");	return false;
+	}
+
+	 max = document.getElementById('cur_max_'+id).value;
+	if (!isRealNum(max)) {
+		alert("电流最大值，输入有误!");	return false;
+	}
+	
+	if (min > max) {
+		alert("电流最小值大于电流最大值，请重新输入!");	return false;
+	}
+
+	var ret = confirm("\n操作确认执行此?\n"); 
+	return ret;
+}
+
+function setSlave(id)
+{
+	var ret = checkInput(id);
+	if(ret) {
+		var vol_min = document.getElementById('vol_min_'+id).value;
+		var vol_max = document.getElementById('vol_max_'+id).value;
+		var cur_min = document.getElementById('cur_min_'+id).value;
+		var cur_max = document.getElementById('cur_max_'+id).value;
+		
+		var options = { url: 'setThreshold', 
+		  data: 'id={0}&vol_min={1}&vol_max={2}&cur_min={3}&cur_max={3}&line={4}'.format(id, vol_min, vol_max, cur_min, cur_max, lineNum), 	
+		  success: function(res) {
+			if(0 == res.id) {
+				location.reload();
+			}
+		  },
+		  fail: function(err) {
+				alert("操作失败");		
+		  }
+		};	
+		ajaxRequest(options);
+	}	
+}
+	
+</script>
+</head>
+
+<body onLoad="pageload();" style="margin:0px; overflow-x :hidden;">
+<div id="lg" style="width:700px; height:auto; border-style:solid; border-width:1px;border-color:#aaaaff;">
+    <table id="tab" width="700" style="font-size:12px;">
+        <tr align="center" style="color:#FFFFFF;background:#0054A8;">
+            <td height="22px">编号</td>
+            <td>电压</td>
+            <td>电压最小值</td>
+			<td>电压最大值</td>
+            <td>电流</td>
+            <td>电流最小值</td>
+			<td>电流最大值</td>
+			<td>修改</td>
+        </tr>
+    </table>				
+</div>
+</body>
+</html>

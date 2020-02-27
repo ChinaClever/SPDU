@@ -1,0 +1,172 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>devstatus</title>
+
+<script type="text/javascript" src="ajax.js"></script>
+<script type="text/javascript">
+
+var devNum = 0; // 设备数量
+var lineNum = 0; // 相
+var devId = 1;
+
+// 获取开关字符串
+function getSwStr(sw) 
+{
+	var ret = '接通';
+	if(sw == 0) ret = '断开';
+	return ret;
+}
+
+// 设置背景色
+function setAlarmColor(obj, alarm) 
+{
+	var color = "#000000";
+	if(alarm == 1) color = "#FF0000";
+	obj.style.color = color;
+}
+
+
+// 以对像来设置数据 
+function setByObj(id, obj)
+{
+	var sw = Number(obj['sw'])
+	var e = document.getElementById('sw_'+id);
+	e.innerHTML = getSwStr(sw);
+	setAlarmColor(e, sw);	
+	
+	e = document.getElementById('vol_'+id);
+	e.innerHTML = obj['vol'];
+	setAlarmColor(e, obj["vol_alarm"]);	
+	
+	e = document.getElementById('cur_'+id);
+	e.innerHTML = obj["cur"];
+	setAlarmColor(e, obj["cur_alarm"]);	
+
+	e = document.getElementById('pow_'+id);
+	e.innerHTML = obj["pow"];
+
+	e = document.getElementById('pf_'+id);
+	e.innerHTML = obj["pf"];
+
+	e = document.getElementById('ele_'+id);
+	e.innerHTML = obj["ele"];
+}
+
+
+// 更新开关状态
+function updateData(obj)
+{
+	var id = Number(obj.id);	
+	setByObj(id, obj);
+}
+
+function getDevID()
+{
+	if(devId > devNum) 
+		devId = 1;
+	return devId++;
+}
+
+function getDevStatus()
+{
+	var id = getDevID();
+	var options = { url: 'getDevStatus', 
+	  data: 'id={0}&line={1}'.format(id, lineNum), 	 	
+	  success: function(obj) {
+			updateData(obj);			
+	  },
+	  fail: function(err) {	
+	  }
+	};	
+	ajaxRequest(options);
+}
+
+// 增加一行表格
+function addtr(id)
+{
+	 var tab=document.getElementById('tab');
+	 var tradd=tab.insertRow(id);
+		 
+	if (id%2) tradd.style.background = "#F5F5F5";
+	tradd.align="center";
+	
+	var fma = {id:id};	
+	var html = '<td height="22px">{id}</td>' +
+			'<td id="sw_{id}"> --- </td>' +
+			'<td id="vol_{id}"> --- </td>' +
+			'<td id="cur_{id}"> --- </td>' +
+			'<td id="pow_{id}"> --- </td>' +
+			'<td id="pf_{id}"> --- </td>' +
+			'<td id="ele_{id}"> --- </td>';
+	 tradd.innerHTML=html.format(fma);  		
+}
+
+
+function createTab(num)
+{
+	devNum = Number(num);
+	for(var i=1; i<=devNum; ++i) {
+		addtr(i);
+	}	
+}
+
+
+function updateStatus()
+{
+	for(var i=1; i<=devNum; ++i) {
+		setTimeout( function(){getDevStatus();}, (i+1)*45);//延迟5000毫米	
+	}
+}
+
+// 获取输出位数量
+function getDevNum() 
+{
+	var options = { url: 'getDevNum', 
+	  data: 'num=0', 	
+	  success: function(obj) {
+			createTab(obj.num);			
+	  },
+	  fail: function(err) {	
+	  }
+	};	
+	ajaxRequest(options);
+}
+
+
+
+// 网页加载时执行函数	
+function pageload() 
+{	
+	
+	getDevNum(); 
+	setTimeout(function(){updateStatus();}, 100);//延迟5000毫米	
+	window.setInterval("updateStatus()",4250);
+	
+/*
+	createTab(10);
+	var arr = {id:5, sw:1, vol:220,vol_alarm:0, cur:1 ,cur_alarm:1, pow:32, pf:0.22, ele:5.5};
+	updateData( arr); 
+*/
+}
+	
+</script>
+</head>
+
+<body onLoad="pageload();" style="margin:0px; overflow-x :hidden;">
+<div id="lg" style="width:700px; height:auto; border-style:solid; border-width:1px;border-color:#aaaaff;">
+    <table id="tab" width="700" style="font-size:12px;">
+        <tr align="center" style="color:#FFFFFF;background:#0054A8;">
+            <td height="22px">编号</td>
+            <td>开关</td>
+			<td>电压</td>
+            <td>电流</td>
+			<td>功率</td>
+			<td>功数</td>
+			<td>电能</td>
+        </tr>
+    </table>
+</div>
+</body>
+</html>

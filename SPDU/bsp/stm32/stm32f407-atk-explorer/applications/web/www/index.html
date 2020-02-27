@@ -7,11 +7,11 @@
   <script language="javascript">  
 	function clk(id)
 	{
-		var page = "output_status"
+		var page = "devstatus"
 		switch(id) {
-		case 1: page = "output_status"; break;
-		case 2: page = "output_timer"; break;
-		case 3: page = "device_timer"; break;
+		case 1: page = "devstatus"; break;
+		case 2: page = "thresholds"; break;
+		case 3: page = "envs"; break;
 		case 4: page = "devset"; break; 
 		case 5: page = "modbus"; break; 		
 		case 6: page = "snmp"; break;
@@ -95,10 +95,10 @@ function pageload()
        <span class="menu">设备状态</span>
       </div> 
       <div style=" top:80px;" onclick="clk(2);" onmouseout="movout(this);" onmousemove="mov(this);"> 
-       <span class="menu">端口定时</span>
+       <span class="menu">阈值设置</span>
       </div> 
       <div style=" top:120px;" onclick="clk(3);" onmouseout="movout(this);" onmousemove="mov(this);"> 
-       <span class="menu">设备定时</span>
+       <span class="menu">环境信息</span>
       </div>
 	  <div style=" top:160px;" onclick="clk(4);" onmouseout="movout(this);" onmousemove="mov(this);"> 
        <span class="menu">设备设置</span>
@@ -145,7 +145,7 @@ function pageload()
       </div> 
      </div> 
      <div style="position:absolute; left: 235px; width: 710px; top: 0px; height: 420px;"> 
-      <iframe id="ifrm" frameborder="no" border="0" width="100%" height="420" src="output_status.html" scrolling="auto"></iframe> 
+      <iframe id="ifrm" frameborder="no" border="0" width="100%" height="420" src="devstatus.html" scrolling="auto"></iframe> 
      </div> 
     </div> 
    </div> 

@@ -11,7 +11,6 @@
 #include <fal.h>
 #include <easyflash.h>
 
-
 /* defined the LED0 pin: PB1 */
 #define LED0_PIN    GET_PIN(B, 1)
 #define FS_PARTITION_NAME  "filesystem"
