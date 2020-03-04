@@ -31,3 +31,4 @@ void snmp_main(void)
 	snmp_init();
 }
 
+//INIT_ENV_EXPORT(net_work_thread);

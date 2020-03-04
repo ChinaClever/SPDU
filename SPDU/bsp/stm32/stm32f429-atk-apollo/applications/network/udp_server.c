@@ -58,7 +58,7 @@ int udp_serv_recv(int sock, char *recv_data, int len)
 }
 
 
-int udp_serv_task(void *arg)
+void udp_serv_task(void *arg)
 {
 	int port = 2707;
 	int ret, sock = udp_serv_init(port);
@@ -75,6 +75,6 @@ int udp_serv_task(void *arg)
 
 void udp_serv_thread(void)
 {
-	rt_thread_t tid = rt_thread_create("udpserv",udp_serv_task, NULL,2*512,24, 5);
+	rt_thread_t tid = rt_thread_create("net_serv",udp_serv_task, NULL,2*512,26, 15);
 	if (tid != RT_NULL) rt_thread_startup(tid);
 }

@@ -82,7 +82,7 @@ static void udp_recv_data(uchar *buf, int len)
 	if(rtn > 0) {
 		if(pkt.addr == 0xff) {
 			int addr;
-			for(addr=0; addr<DEV_NUM; ++addr) { // 设备所有副机
+			for(addr=1; addr<=DEV_NUM; ++addr) { // 设备所有副机
 				pkt.addr = addr;
 				net_recv_dataPacket(&pkt);
 			}
@@ -116,8 +116,8 @@ static void udps_thread_entry(void *p)
 /**
  * 创建并启动心跳包线程
  */
-void udp_server_thread(void)
+void udp_recv_thread(void)
 {
-	rt_thread_t tid = rt_thread_create("udp_server",udps_thread_entry, NULL, 2*512, 22, 5);
+	rt_thread_t tid = rt_thread_create("m_recv",udps_thread_entry, NULL, 2*512, 27, 15);
 	if (tid != RT_NULL) rt_thread_startup(tid);
 }

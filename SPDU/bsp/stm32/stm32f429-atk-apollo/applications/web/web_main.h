@@ -10,6 +10,6 @@
 #include "web_settime.h"
 
 
-void web_main(void);
+//void web_main(void);
 
 #endif /* BSP_STM32_STM32F407_ATK_EXPLORER_APPLICATIONS_WEB_WEB_MAIN_H_ */

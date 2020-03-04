@@ -9,7 +9,6 @@
 #define BSP_STM32_STM32F407_ATK_EXPLORER_APPLICATIONS_MODBUS_MODBUS_SERVER_H_
 #include "modbus_write.h"
 
-
-void modbus_thread(void);
+int modbus_thread(void);
 
 #endif /* BSP_STM32_STM32F407_ATK_EXPLORER_APPLICATIONS_MODBUS_MODBUS_SERVER_H_ */

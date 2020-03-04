@@ -9,7 +9,11 @@
  *      Author: luozhiyong
  */
 #include <rtthread.h>
+#ifdef TINY_CRYPT_AES
 #include <tiny_aes.h>
+#include <stdlib.h>
+
+typedef unsigned char uchar;
 
 /**
  * ECB模式又称电子密码本模式（Electronic codebook）：
@@ -19,19 +23,19 @@
  * ECB模式由于每块数据的加密是独立的因此加密和解密都可以并行计算，
  * ECB模式最大的缺点是相同的明文块会被加密成相同的密文块，这种方法在某些环境下不能提供严格的数据保密性。
  */
-void aes_ecb_encrypt(uint8_t *private_key, uint8_t *data, uint8_t *data_encrypt)
+void aes_ecb_encrypt(uchar *private_key, uchar *data, uchar *data_encrypt)
 {
 	tiny_aes_context ctx;
 
-	tiny_aes_setkey_enc(&ctx, (uint8_t *) private_key, 128);
+	tiny_aes_setkey_enc(&ctx, private_key, 128);
 	tiny_aes_crypt_ecb(&ctx, AES_ENCRYPT, data, data_encrypt);
 }
 
-void aes_ecb_decrypt(uint8_t *private_key, uint8_t *data_encrypt, uint8_t *data_decrypt)
+void aes_ecb_decrypt(uchar *private_key, uchar *data_encrypt, uchar *data_decrypt)
 {
 	tiny_aes_context ctx;
 
-	tiny_aes_setkey_dec(&ctx, (uint8_t *) private_key, 128);
+	tiny_aes_setkey_dec(&ctx, (uchar *) private_key, 128);
 	tiny_aes_crypt_ecb(&ctx, AES_DECRYPT, data_encrypt, data_decrypt);
 }
 
@@ -48,20 +52,20 @@ void aes_ecb_decrypt(uint8_t *private_key, uint8_t *data_encrypt, uint8_t *data_
  * 但由于对每个数据块的加密依赖与前一个数据块的加密所以加密无法并行。
  * 与ECB一样在加密前需要对数据进行填充，不是很适合对流数据进行加密。
  */
-void aes_cbc_encrypt(uint8_t iv, uint8_t private_key, uint8_t data, uint8_t data_encrypt)
+void aes_cbc_encrypt(uchar *iv, uchar *private_key, uchar *data, uchar *data_encrypt)
 {
 	tiny_aes_context ctx;
 
-	tiny_aes_setkey_enc(&ctx, (uint8_t *) private_key, 256);
-	tiny_aes_crypt_cbc(&ctx, AES_ENCRYPT, rt_strlen(data), iv, data, data_encrypt);
+	tiny_aes_setkey_enc(&ctx, private_key, 256);
+	tiny_aes_crypt_cbc(&ctx, AES_ENCRYPT, rt_strlen((const char *)data), iv, data, data_encrypt);
 }
 
 // aes 解密
-void aes_cbc_decrypt(uint8_t iv, uint8_t private_key, uint8_t len, uint8_t data_encrypt, uint8_t data_decrypt)
+void aes_cbc_decrypt(uchar *iv, uchar *private_key, uchar len, uchar *data_encrypt, uchar *data_decrypt)
 {
 	tiny_aes_context ctx;
 
-	tiny_aes_setkey_dec(&ctx, (uint8_t *) private_key, 256);
+	tiny_aes_setkey_dec(&ctx, private_key, 256);
 	tiny_aes_crypt_cbc(&ctx, AES_DECRYPT, len, iv, data_encrypt, data_decrypt);
 }
 
@@ -73,32 +77,32 @@ void aes_cbc_decrypt(uint8_t iv, uint8_t private_key, uint8_t len, uint8_t data_
  *
  * OFB与CFB一样都非常适合对流数据的加密，OFB由于加密和解密都依赖与前一段数据，所以加密和解密都不能并行。
  */
-void aes_cfb_encrypt(int *iv_off, uint8_t iv, uint8_t private_key, uint8_t data, uint8_t data_encrypt)
+void aes_cfb_encrypt(int *iv_off, uchar *iv, uchar *private_key, uchar *data, uchar *data_encrypt)
 {
 	tiny_aes_context ctx;
 
-	tiny_aes_setkey_enc(&ctx, (uint8_t *) private_key, 128);
-	tiny_aes_crypt_cfb128(&ctx, AES_ENCRYPT, rt_strlen(data), iv_off, iv, data, data_encrypt);
+	tiny_aes_setkey_enc(&ctx, private_key, 128);
+	tiny_aes_crypt_cfb128(&ctx, AES_ENCRYPT, rt_strlen((const char *)data), iv_off, iv, data, data_encrypt);
 }
 
 // aes 解密
-void aes_cfb_decrypt(int *iv_off, uint8_t iv, uint8_t private_key, uint8_t len, uint8_t data_encrypt, uint8_t data_decrypt)
+void aes_cfb_decrypt(int *iv_off, uchar *iv, uchar *private_key, uchar len, uchar *data_encrypt, uchar *data_decrypt)
 {
 	tiny_aes_context ctx;
 
-	tiny_aes_setkey_dec(&ctx, (uint8_t *) private_key, 128);
+	tiny_aes_setkey_dec(&ctx, private_key, 128);
 	tiny_aes_crypt_cfb128(&ctx, AES_DECRYPT, len, iv_off, iv, data_encrypt, data_decrypt);}
 
 
 #define TEST_TINY_AES_IV  "0123456789ABCDEF"
 #define TEST_TINY_AES_KEY "0123456789ABCDEF0123456789ABCDEF"
 
-void aes_encrypt_test(uint8_t *data, uint8_t *data_encrypt)
+void aes_encrypt_test(uchar *data, uchar *data_encrypt)
 {
-	uint8_t iv[16 + 1];
-	uint8_t private_key[32 + 1];
-	unsigned char data_encrypt[32];
-	unsigned char data_decrypt[32];
+	uchar iv[16 + 1];
+	uchar private_key[32 + 1];
+//	uchar data_encrypt[32];
+//	uchar data_decrypt[32];
 
 	/* encrypt */
 	rt_memcpy(iv, TEST_TINY_AES_IV, rt_strlen(TEST_TINY_AES_IV));
@@ -111,10 +115,10 @@ void aes_encrypt_test(uint8_t *data, uint8_t *data_encrypt)
 }
 
 
-void aes_decrypt_test(uint8_t len, uint8_t *data_encrypt, uint8_t *data_decrypt)
+void aes_decrypt_test(uchar len, uchar *data_encrypt, uchar *data_decrypt)
 {
-	uint8_t iv[16 + 1];
-	uint8_t private_key[32 + 1];
+	uchar iv[16 + 1];
+	uchar private_key[32 + 1];
 
 	rt_memcpy(iv, TEST_TINY_AES_IV, rt_strlen(TEST_TINY_AES_IV));
 	iv[sizeof(iv) - 1] = '\0';
@@ -122,7 +126,7 @@ void aes_decrypt_test(uint8_t len, uint8_t *data_encrypt, uint8_t *data_decrypt)
 	private_key[sizeof(private_key) - 1] = '\0';
 
 	//rt_memset(data_decrypt, 0x0, sizeof(data_decrypt));
-	aes_cbc_decrypt(iv, private_key, data_encrypt, data_decrypt);
+	aes_cbc_decrypt(iv, private_key, len, data_encrypt, data_decrypt);
 }
 
 
@@ -134,7 +138,7 @@ void aes_test()
 
     aes_encrypt_test(data, data_encrypt);
 
-    uint8_t len = strlen(data);
+    uchar len = rt_strlen((const char *)data);
     aes_decrypt_test(len, data_encrypt, data_decrypt);
 
     if(rt_memcmp(data, data_decrypt, len) == 0) {
@@ -143,3 +147,5 @@ void aes_test()
     	rt_kprintf("AES CBC mode failed!");
     }
 }
+
+#endif

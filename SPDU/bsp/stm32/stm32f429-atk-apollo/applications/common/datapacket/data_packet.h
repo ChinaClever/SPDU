@@ -14,7 +14,7 @@
 #define OUTPUT_NUM 42
 #define SENOR_NUM 1
 #define NAME_SIZE RT_NAME_MAX
-#define DEV_NUM 30
+#define DEV_NUM 42
 #define ARRAY_SIZE 255 //一包数据最长
 #define PACK_ARRAY_SIZE LINE_NUM
 

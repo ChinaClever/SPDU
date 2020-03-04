@@ -101,9 +101,8 @@ static void udp_thread_entry(void *p)
 	udp_delay(2);
 	uchar recv_data[UDP_BUF_SIZE/4]={0};
 	int sock_fd  = udp_initSocket();
-	while(1)
-	{
-		udp_delay(1);
+	while(1) {
+	    udp_udelay(1);
 		udp_hbRecvData(sock_fd, recv_data);
 	}
 }
@@ -114,11 +113,9 @@ static void udp_thread_entry(void *p)
  */
 static void udp_thread_count(void *p)
 {
-	while(1)
-	{
+	while(1) {
 		udp_delay(1);
-		if(gUdpCount>0)
-			gUdpCount--; /*发送一次减少一次 */
+		if(gUdpCount>0) gUdpCount--; /*发送一次减少一次 */
 	}
 }
 
@@ -127,7 +124,7 @@ static void udp_thread_count(void *p)
  */
 static void udp_count_thread(void)
 {
-	rt_thread_t tid = rt_thread_create("udp_count",udp_thread_count, NULL, 256, 25, 1);
+	rt_thread_t tid = rt_thread_create("m_count",udp_thread_count, NULL, 256, 27, 5);
 	if (tid != RT_NULL) rt_thread_startup(tid);
 }
 
@@ -137,7 +134,7 @@ static void udp_count_thread(void)
  */
 void udp_hb_thread(void)
 {
-	rt_thread_t tid = rt_thread_create("udp_hb",udp_thread_entry, NULL, 3*256, 25, 3);
+	rt_thread_t tid = rt_thread_create("m_hb",udp_thread_entry, NULL, 1024, 27, 10);
 	if (tid != RT_NULL) {
 		rt_thread_startup(tid);
 		udp_count_thread();

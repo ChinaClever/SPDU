@@ -15,7 +15,7 @@ void mb_env_write(sMdCfg *mb)
 
 void mb_env_default(sMdCfg *mb)
 {
-	mb->en = 0;
+	mb->en = 1;
 	mb->port = 502;
 	mb_env_write(mb);
 }

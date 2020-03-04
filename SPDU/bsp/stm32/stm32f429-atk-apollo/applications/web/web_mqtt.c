@@ -5,6 +5,7 @@
  *      Author: luozhiyong
  */
 #include "web_mqtt.h"
+#ifdef PKG_USING_MYMQTT
 
 void web_mqtt_get(struct webnet_session* session)
 {
@@ -75,3 +76,5 @@ void web_mqtt(void)
 	webnet_cgi_register("getMqtts", web_mqtt_get);
 	webnet_cgi_register("setMqtts", web_mqtt_set);
 }
+
+#endif

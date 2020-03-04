@@ -22,7 +22,7 @@ void net_env_write(sNetPush *net)
 
 void net_env_default(sNetPush *cfg)
 {
-	cfg->en = 1;
+	cfg->en = 0;
 	strcpy(cfg->url, "192.168.1.215");
 	strcpy(cfg->path, "/");
 	cfg->port = 8080;

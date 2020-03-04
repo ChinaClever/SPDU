@@ -21,7 +21,7 @@ static void setUnit(sDataUnit *unit, dev_data_packet *pkt, double rate)
 	memset(setbuf,0,sizeof(setbuf));
 	charToShort(pkt->data, pkt->len, buf);
 
-	int id = pkt->addr;
+	ushort id = pkt->addr;
 	int fn = pkt->fn[1]; //输出位，
 	if(fn) {
 		unit->min[fn-1] = buf[0]/rate; // 最小值
@@ -96,6 +96,7 @@ void net_recv_dataPacket(dev_data_packet *pkt)
 {
 	int id = pkt->addr;
 	sDataPacket *packet = data_packet_get(id);
+    if(packet->offLine < 1) return;
 	sDevData *dev = &(packet->data);
 	switch(pkt->fn[0])
 	{

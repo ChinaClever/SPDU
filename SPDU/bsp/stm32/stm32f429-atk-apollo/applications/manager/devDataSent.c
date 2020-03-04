@@ -359,9 +359,10 @@ void dev_data_sent(pduDevData *ptr)
 
 static void dev_thread_entry(void *p)
 {
+    udp_delay(1);
 	pduDevData *devData = (pduDevData*)malloc(sizeof(pduDevData));
 	while(1) {
-		sleep(3);
+	    udp_delay(3);
 		if(udp_sentCheck()) { 	/*·þÎñ¶Ë¼ì²é*/
 			dev_data_sent(devData);
 		}
@@ -374,7 +375,7 @@ static void dev_thread_entry(void *p)
  */
 void dev_sent_thread(void)
 {
-	rt_thread_t tid = rt_thread_create("dev_sent",dev_thread_entry, NULL, 3*512, 21, 4);
+	rt_thread_t tid = rt_thread_create("m_sent",dev_thread_entry, NULL, 3*512, 27, 25);
 	if (tid != RT_NULL) rt_thread_startup(tid);
 }
 

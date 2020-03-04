@@ -49,7 +49,7 @@ ushort *mb_read_envData(ushort *reg, sEnvData *env)
 
 int mb_read_packet(uchar addr, modbus_mapping_t *mb)
 {
-	ushort *ptr = &(mb->tab_registers[1]);
+	ushort *ptr = &(mb->tab_registers[2]);
 	sDataPacket *packet = data_packet_get(addr);
 
 	if(packet->offLine) {

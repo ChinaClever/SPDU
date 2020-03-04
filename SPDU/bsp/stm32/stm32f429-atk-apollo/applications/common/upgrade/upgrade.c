@@ -1,7 +1,7 @@
 /*
  * upgrade.c
  *
- *  Created on: 2019Äê12ÔÂ18ÈÕ
+ *  Created on: 2019ï¿½ï¿½12ï¿½ï¿½18ï¿½ï¿½
  *      Author: luozhiyong
  */
 #include "udp_server.h"
@@ -19,7 +19,7 @@ int up_serv_recv(int sock, char *ip)
 	int bytes_read = false;
 	if(sock >= 0) {
 		bytes_read = recvfrom(sock, recv_data, len-1, 0, (struct sockaddr *)&client_addr, &addr_len);
-		recv_data[bytes_read] = '\0'; /* °ÑÄ©¶ËÇåÁã */ /* UDP²»Í¬ÓÚTCP£¬Ëü»ù±¾²»»á³öÏÖÊÕÈ¡µÄÊý¾ÝÊ§°ÜµÄÇé¿ö£¬³ý·ÇÉèÖÃÁË³¬Ê±µÈ´ý */
+		recv_data[bytes_read] = '\0'; /* ï¿½ï¿½Ä©ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ */ /* UDPï¿½ï¿½Í¬ï¿½ï¿½TCPï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½È¡ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê§ï¿½Üµï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ë³ï¿½Ê±ï¿½È´ï¿½ */
 		// rt_kprintf("\n(%s , %d) said : ", inet_ntoa(client_addr.sin_addr),ntohs(client_addr.sin_port));
 		sprintf(ip, "%s", inet_ntoa(client_addr.sin_addr));
 	}
@@ -28,25 +28,31 @@ int up_serv_recv(int sock, char *ip)
 }
 
 
-int up_serv_task(void *arg)
+void up_serv_task(void *arg)
 {
 	int port = 1750;
-	int ret, sock = udp_serv_init(port);
+	int ret, sock = 0;
 	char url[48], ip[32];
 
-	sleep(5);
+	sleep(2);
+	sock = udp_serv_init(port);
 	while(1) {
 		ret = up_serv_recv(sock, ip);
 		if(ret > 0) {
-			sprintf(url, "http://%s/rtthread.rbl:1180", ip);
+			sprintf(url, "http://%s:1180", ip);
 			http_ota_fw_download(url);
 		}
 		msleep(1);
 	}
 }
 
-void up_serv_thread(void)
+
+int up_serv_thread(void)
 {
-	rt_thread_t tid = rt_thread_create("upgrade",up_serv_task, NULL,512,17, 5);
+	rt_thread_t tid = rt_thread_create("upgrade",up_serv_task, NULL,4096,2, 5);
 	if (tid != RT_NULL) rt_thread_startup(tid);
+
+	return 0;
 }
+
+INIT_ENV_EXPORT(up_serv_thread);

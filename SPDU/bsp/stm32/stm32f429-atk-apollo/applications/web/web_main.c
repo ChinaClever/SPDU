@@ -58,8 +58,9 @@ void web_dev_num(struct webnet_session* session)
 	webnet_session_printf(session, status, num);
 }
 
-void web_main(void)
+void web_main_entry(void *p)
 {
+    msleep(2100);
 	web_auth_init();
 	web_devstatus();
 	web_thresholds();
@@ -67,10 +68,15 @@ void web_main(void)
 
 	web_modbus();
 	web_network();
+
+#ifdef PKG_USING_MYMQTT
 	web_mqtt();
+#endif
+
 #ifdef PKG_USING_ALI_IOTKIT
 	web_aliiot();
 #endif
+
 	web_user();
 	web_ip_addr();
 	web_ntp_time();
@@ -82,4 +88,11 @@ void web_main(void)
 	webnet_init();
 }
 
+static int web_init_thread(void)
+{
+    rt_thread_t thread = rt_thread_create("web_init", web_main_entry, NULL, 2*1024, 3, 5);
+    if (thread != RT_NULL)  rt_thread_startup(thread);
+    return 0;
+}
 
+INIT_ENV_EXPORT(web_init_thread);

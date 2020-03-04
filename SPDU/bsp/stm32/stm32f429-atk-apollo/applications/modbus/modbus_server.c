@@ -6,7 +6,6 @@
  */
 #include "modbus.h"
 #include "modbus_server.h"
-#include "tcp_server.h"
 
 #define MD_REG_NUM 	32
 static modbus_mapping_t *mb_mapping = NULL;
@@ -102,7 +101,7 @@ void mb_down_task(void *param)
 				closesocket(cs);
 				break;
 			}
-			//msleep(1);
+			msleep(1);
 		}
 	}
 
@@ -111,10 +110,12 @@ void mb_down_task(void *param)
 	modbus_free(ctx);
 }
 
-
-
-void modbus_thread(void)
+int modbus_thread(void)
 {
 	rt_thread_t tid = rt_thread_create("modbus",mb_down_task, NULL,2*1024,13, 15);
 	if (tid != RT_NULL) rt_thread_startup(tid);
+
+	return 0;
 }
+
+INIT_ENV_EXPORT(modbus_thread);

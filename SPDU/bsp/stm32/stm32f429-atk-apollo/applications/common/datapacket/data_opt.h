@@ -32,10 +32,6 @@ typedef  unsigned short    word;         /* Unsinged 16 bit value type. */
 #define  MAX( x, y ) ( ((x) > (y)) ? (x) : (y) )
 #define  MIN( x, y ) ( ((x) < (y)) ? (x) : (y) )
 
-//得到一个field在结构体(struct)中的偏移量
-//#define FPOS( type, field ) \
-/*lint -e545 */ ( (dword) &(( type *) 0)-> field ) /*lint +e545 */
-
 //按照LSB格式把两个字节转化为一个Word
 #define  FLIPW( ray ) ( (((word) (ray)[0]) << 8) + (ray)[1] )
 

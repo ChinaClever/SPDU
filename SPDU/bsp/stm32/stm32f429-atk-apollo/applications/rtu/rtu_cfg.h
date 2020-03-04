@@ -12,10 +12,10 @@
 #include "data_packet.h"
 #include "list.h"
 
-#define UARTS_NUM 6
+#define UARTS_NUM 7
 #define UART_DELAY 100
 #define UART_TIMEOUT 1000
-#define UART_PORT_NUM 5
+#define UART_PORT_NUM 6
 
 #define UART_RECV_SIZE 256
 #define UART_SENT_SIZE 24
