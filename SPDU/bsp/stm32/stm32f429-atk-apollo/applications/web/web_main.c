@@ -51,12 +51,7 @@ void web_auth_init(void)
 }
 
 
-void web_dev_num(struct webnet_session* session)
-{
-	char num = 5;
-	static const char* status = "num=%d";
-	webnet_session_printf(session, status, num);
-}
+
 
 void web_main_entry(void *p)
 {
@@ -81,7 +76,6 @@ void web_main_entry(void *p)
 	web_ip_addr();
 	web_ntp_time();
 
-	webnet_cgi_register("getDevNum", web_dev_num);
 	webnet_cgi_register("getVersion", web_dev_version);
 	webnet_cgi_register("reset", web_dev_reset);
 

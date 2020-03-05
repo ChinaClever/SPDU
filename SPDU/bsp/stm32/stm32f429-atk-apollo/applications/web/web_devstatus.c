@@ -10,16 +10,16 @@ void web_dev_status(struct webnet_session* session)
 {
 	static char qure[256] = {0};
 	struct webnet_request* request = session->request;
-	const char *id_str = webnet_request_get_query(request, "id");
+	const char *id_str = webnet_request_get_query(request, "addr");
 	const char *line_str = webnet_request_get_query(request, "line");
 
 	char *ptr=qure;
-	int id = atoi(id_str);
+	int addr = atoi(id_str);
 	int line = atoi(line_str);
-	sObjData *t = &(data_packet_get(id)->data.line);
+	sObjData *t = &(data_packet_get(addr)->data.line);
 
 	ptr[0] = 0;
-	sprintf(ptr, "id=%d", id); ptr += strlen(ptr);
+	sprintf(ptr, "addr=%d", addr); ptr += strlen(ptr);
 	sprintf(ptr, "&line=%d", line); ptr += strlen(ptr);
 	sprintf(ptr, "&sw=%d", t->sw); ptr += strlen(ptr);
 	sprintf(ptr, "&vol=%d",t->vol.value[line]); ptr += strlen(ptr);
@@ -33,8 +33,15 @@ void web_dev_status(struct webnet_session* session)
 	webnet_session_printf(session, "%s", qure);
 }
 
+void web_dev_num(struct webnet_session* session)
+{
+	char num = 5, line=3;
+	static const char* status = "devNum=%d&lineNum=%d";
+	webnet_session_printf(session, status, num, line);
+}
 
 void web_devstatus(void)
 {
+	webnet_cgi_register("getDevNum", web_dev_num);
 	webnet_cgi_register("getDevStatus", web_dev_status);
 }

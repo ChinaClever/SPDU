@@ -9,20 +9,25 @@
 
 var devNum = 0; // 设备数量
 var lineNum = 0; // 相
-var devId = 1;
 
-function setThreshold(id, obj)
+var gId = 0;
+var gRows = 0;
+
+function setThreshold(obj)
 {	
-	var e = document.getElementById('vol_min_'+id);
+	var addr = Number(obj.addr);
+	var line = Number(obj.line);
+	
+	var e = document.getElementById('vol_min_'+addr+'_'+line);
 	e.value = obj["vol_min"];
 	
-	e = document.getElementById('vol_max_'+id);
+	e = document.getElementById('vol_max_'+addr+'_'+line);
 	e.value = obj["vol_max"];
 
-	e = document.getElementById('cur_min_'+id);
+	e = document.getElementById('cur_min_'+addr+'_'+line);
 	e.value = obj["cur_min"];
 	
-	e = document.getElementById('cur_max_'+id);
+	e = document.getElementById('cur_max_'+addr+'_'+line);
 	e.value = obj["cur_max"];
 }
 
@@ -34,48 +39,51 @@ function setAlarmColor(obj, alarm)
 	obj.style.color = color;
 }
 
-// 以对像来设置一行定时数据  var obj = {id:1, en_1:2, open_1:3, close_1:4};
-function setValueByObj(id, obj)
+// 以对像来设置一行定时数据  var obj = {addr:1, en_1:2, open_1:3, close_1:4};
+function setValueByObj(obj)
 {
-	var e = document.getElementById('vol_'+id);
+	var addr = Number(obj.addr);
+	var line = Number(obj.line);
+	
+	var e = document.getElementById('vol_'+addr+'_'+line);
 	e.innerHTML = obj['vol'];
 	setAlarmColor(e, obj["vol_alarm"]);	
 	
-	e = document.getElementById('cur_'+id);
+	e = document.getElementById('cur_'+addr+'_'+line);
 	e.innerHTML = obj["cur"];
 	setAlarmColor(e, obj["cur_alarm"]);		
-
-	return en;
 }
 
 
 function updateValue(obj)
-{
-	var id = Number(obj.id);
-	setValueByObj(id, obj);
+{	
+	setValueByObj(obj);
 }
 
 function updateThreshold(obj)
 {
-	var id = Number(obj.id);
-	setThreshold(id, obj);
+	setThreshold(obj);
 	updateValue(obj);	
 }
 
 
 function getDevID()
 {
-	if(devId > devNum) 
-		devId = 1;
-	return devId++;
+	if(gId >= gRows) 
+		gId = 0;
+		
+	return gId++;	
 }
 
 
 function getThreshold()
 {
 	var id = getDevID();
+	var addr = 1+id/lineNum;
+	var line = id%lineNum;	
+	
 	var options = { url: 'getThresholds', 
-	  data: 'id={0}&line={1}'.format(id, lineNum), 	 	
+	  data: 'addr={0}&line={1}'.format(addr, line), 	 	
 	  success: function(obj) {
 			updateThreshold(obj);			
 	  },
@@ -87,7 +95,7 @@ function getThreshold()
 
 function getThresholds()
 {
-	for(var i=1; i<=devNum; ++i) {
+	for(var i=1; i<=gRows; ++i) {
 		setTimeout( function(){getThreshold();}, (i+1)*45);//延迟5000毫米	
 	}
 }
@@ -96,9 +104,11 @@ function getThresholds()
 function getValues()
 {
 	var id = getDevID();
+	var addr = 1+id/lineNum;
+	var line = id%lineNum;	
 
 	var options = { url: 'getValues', 
-	  data: 'id={0}&line={1}'.format(id, lineNum), 	 	
+	  data: 'addr={0}&line={1}'.format(addr, line), 	 	
 	  success: function(obj) {
 			updateValue(obj);			
 	  },
@@ -110,14 +120,14 @@ function getValues()
 
 function updateStatus()
 {
-	for(var i=0; i<=devNum; ++i) {
+	for(var i=0; i<=gRows; ++i) {
 		setTimeout( function(){getValues();}, (i+1)*45);//延迟5000毫米	
 	}
 }
 
 
 // 增加一行表格
-function addtr(id)
+function addtr(id, addr, line)
 {
 	 var tab=document.getElementById('tab');
 	 var tradd=tab.insertRow(id);
@@ -125,24 +135,30 @@ function addtr(id)
 	if (id%2) tradd.style.background = "#F5F5F5";
 	tradd.align="center";
 	
-	var fma = {id:id};	
+	var fma = {id:id,addr:addr,line:line};	
 	var html = '<td height="22px">{id}</td>' + 
-                '<td id="vol_{id}"> --- </td>' +
-                '<td> <input id="vol_min_{id}" type="number" style="width:50px"/> </td>' +
-                '<td> <input id="vol_max_{id}" type="number" style="width:50px"/> </td>' +
-                '<td id="cur_{id}"> --- </td>' +
-                '<td> <input id="cur_min_{id}" type="number" style="width:50px"/> </td>' +
-                '<td> <input id="cur_max_{id}" type="number" style="width:50px"/> </td>' +
-				'<td> <input type="button" value="提交" onClick="setSlave({id});"/> </td>'; 
+				'<td id="addr_{addr}_{line}"> {addr} </td>' +
+				'<td id="line_{addr}_{line}"> {line} </td>' +
+                '<td id="vol_{addr}_{line}"> --- </td>' +
+                '<td> <input id="vol_min_{addr}_{line}" type="number" style="width:50px"/> </td>' +
+                '<td> <input id="vol_max_{addr}_{line}" type="number" style="width:50px"/> </td>' +
+                '<td id="cur_{addr}_{line}"> --- </td>' +
+                '<td> <input id="cur_min_{addr}_{line}" type="number" style="width:50px"/> </td>' +
+                '<td> <input id="cur_max_{addr}_{line}" type="number" style="width:50px"/> </td>' +
+				'<td> <input type="button" value="提交" onClick="setSlave({addr}, {line});"/> </td>'; 
 	 tradd.innerHTML=html.format(fma);  		
 }
 
 // 创建表格
-function createTab(num)
+function createTab(obj)
 {
-	devNum = Number(num);
-	for(var i=1; i<=Number(num); ++i) {
-		addtr(i);
+	gRows = 0;
+	devNum = Number(obj.devNum);
+	lineNum = Number(obj.lineNum);	
+	for(var i=1; i<=devNum; ++i) {
+		for(var j=0; j<lineNum; ++j) {
+			addtr(++gRows, i, j);
+		}
 	}
 }
 
@@ -151,9 +167,9 @@ function createTab(num)
 function getDevNum() 
 {
 	var options = { url: 'getDevNum', 
-	  data: 'num=0', 	
+	  data: 'devNum={0}&lineNum={1}'.format(devNum, lineNum), 		
 	  success: function(obj) {
-			createTab(obj.num);			
+			createTab(obj);			
 	  },
 	  fail: function(err) {	
 	  }
@@ -172,9 +188,11 @@ function pageload()
 	window.setInterval("updateStatus()",4250);
 
 	// 测试代码
-	// createTab(10);
-	//var arr = {id:5, vol:220,vol_alarm:0,vol_min:1,vol_max:2,cur:1, cur_alarm:1, cur_min:3,  cur_max:4};
-	//updateThreshold(arr); 
+/*	 var zz = {devNum:5, lineNum:3};
+	createTab(zz);	
+	var arr = {addr:3, line:1, vol:220,vol_alarm:0,vol_min:1,vol_max:2,cur:1, cur_alarm:1, cur_min:3,  cur_max:4};
+	updateThreshold(arr); 
+	*/
 }
 
 function isRealNum(val){
@@ -189,14 +207,14 @@ function isRealNum(val){
     }
 }           
 
-function checkInput(id)
+function checkInput(addr, line)
 {	
-	var min = document.getElementById('vol_min_'+id).value;
+	var min = document.getElementById('vol_min_'+addr+'_'+line).value;
 	if (!isRealNum(min)) {
 		alert("电压最小值，输入有误!");	return false;
 	}
 
-	var max = document.getElementById('vol_max_'+id).value;
+	var max = document.getElementById('vol_max_'+addr+'_'+line).value;
 	if (!isRealNum(max)) {
 		alert("电压最大值，输入有误!");	return false;
 	}
@@ -205,12 +223,12 @@ function checkInput(id)
 		alert("电压最小值大于电压最大值，请重新输入!");	return false;
 	}
 
-	 min = document.getElementById('cur_min_'+id).value;
+	 min = document.getElementById('cur_min_'+addr+'_'+line).value;
 	if (!isRealNum(min)) {
 		alert("电流最小值，输入有误!");	return false;
 	}
 
-	 max = document.getElementById('cur_max_'+id).value;
+	 max = document.getElementById('cur_max_'+addr+'_'+line).value;
 	if (!isRealNum(max)) {
 		alert("电流最大值，输入有误!");	return false;
 	}
@@ -223,19 +241,19 @@ function checkInput(id)
 	return ret;
 }
 
-function setSlave(id)
+function setSlave(addr, line)
 {
-	var ret = checkInput(id);
+	var ret = checkInput(addr, line);
 	if(ret) {
-		var vol_min = document.getElementById('vol_min_'+id).value;
-		var vol_max = document.getElementById('vol_max_'+id).value;
-		var cur_min = document.getElementById('cur_min_'+id).value;
-		var cur_max = document.getElementById('cur_max_'+id).value;
+		var vol_min = document.getElementById('vol_min_'+addr+'_'+line).value;
+		var vol_max = document.getElementById('vol_max_'+addr+'_'+line).value;
+		var cur_min = document.getElementById('cur_min_'+addr+'_'+line).value;
+		var cur_max = document.getElementById('cur_max_'+addr+'_'+line).value;
 		
 		var options = { url: 'setThreshold', 
-		  data: 'id={0}&vol_min={1}&vol_max={2}&cur_min={3}&cur_max={3}&line={4}'.format(id, vol_min, vol_max, cur_min, cur_max, lineNum), 	
+		  data: 'addr={0}&line={1}&vol_min={2}&vol_max={3}&cur_min={4}&cur_max={5}'.format(addr, line, vol_min, vol_max, cur_min, cur_max), 	
 		  success: function(res) {
-			if(0 == res.id) {
+			if(0 == res.addr) {
 				location.reload();
 			}
 		  },
@@ -255,6 +273,8 @@ function setSlave(id)
     <table id="tab" width="700" style="font-size:12px;">
         <tr align="center" style="color:#FFFFFF;background:#0054A8;">
             <td height="22px">编号</td>
+			<td>地址</td>
+            <td>L\C</td>
             <td>电压</td>
             <td>电压最小值</td>
 			<td>电压最大值</td>

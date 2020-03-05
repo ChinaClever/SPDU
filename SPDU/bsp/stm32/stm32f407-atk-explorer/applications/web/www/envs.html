@@ -2,27 +2,30 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-<title>devthresholds</title>
+<title>envs</title>
 
 <script type="text/javascript" src="ajax.js"></script>
 <script type="text/javascript">
 
 var devNum = 0; // 设备数量
 var envId = 0; // 相
-var devId = 1;
 
-function setThreshold(id, obj)
+var gId = 0;
+var gRows = 0;
+
+function setThreshold(obj)
 {	
-	var e = document.getElementById('tem_min_'+id);
+	var addr = Number(obj.addr);
+	var e = document.getElementById('tem_min_'+addr);
 	e.value = obj["tem_min"];
 	
-	e = document.getElementById('tem_max_'+id);
+	e = document.getElementById('tem_max_'+addr);
 	e.value = obj["tem_max"];
 
-	e = document.getElementById('hum_min_'+id);
+	e = document.getElementById('hum_min_'+addr);
 	e.value = obj["hum_min"];
 	
-	e = document.getElementById('hum_max_'+id);
+	e = document.getElementById('hum_max_'+addr);
 	e.value = obj["hum_max"];
 }
 
@@ -34,48 +37,46 @@ function setAlarmColor(obj, alarm)
 	obj.style.color = color;
 }
 
-// 以对像来设置一行定时数据  var obj = {id:1, en_1:2, open_1:3, close_1:4};
-function setValueByObj(id, obj)
+// 以对像来设置一行定时数据  var obj = {addr:1, en_1:2, open_1:3, close_1:4};
+function setValueByObj(obj)
 {
-	var e = document.getElementById('tem_'+id);
+	var addr = Number(obj.addr);
+	var e = document.getElementById('tem_'+addr);
 	e.innerHTML = obj['tem'];
 	setAlarmColor(e, obj["tem_alarm"]);	
 	
-	e = document.getElementById('hum_'+id);
+	e = document.getElementById('hum_'+addr);
 	e.innerHTML = obj["hum"];
 	setAlarmColor(e, obj["hum_alarm"]);		
-
-	return en;
 }
 
 
 function updateValue(obj)
 {
-	var id = Number(obj.id);
-	setValueByObj(id, obj);
+	setValueByObj(obj);
 }
 
 function updateThreshold(obj)
 {
-	var id = Number(obj.id);
-	setThreshold(id, obj);
+	setThreshold(obj);
 	updateValue(obj);	
 }
 
 
 function getDevID()
 {
-	if(devId > devNum) 
-		devId = 1;
-	return devId++;
+	if(gId >= gRows) 
+		gId = 0;
+		
+	return gId++;	
 }
 
 
 function getThreshold()
 {
-	var id = getDevID();
+	var addr = getDevID()+1;
 	var options = { url: 'getEnvThresholds', 
-	  data: 'id={0}&line={1}'.format(id, envId), 	 	
+	  data: 'addr={0}&line={1}'.format(addr, envId), 	 	
 	  success: function(obj) {
 			updateThreshold(obj);			
 	  },
@@ -87,7 +88,7 @@ function getThreshold()
 
 function getThresholds()
 {
-	for(var i=1; i<=devNum; ++i) {
+	for(var i=1; i<=gRows; ++i) {
 		setTimeout( function(){getThreshold();}, (i+1)*45);//延迟5000毫米	
 	}
 }
@@ -95,10 +96,10 @@ function getThresholds()
 
 function getValues()
 {
-	var id = getDevID();
+	var addr = getDevID();
 
 	var options = { url: 'getEnvValues', 
-	  data: 'id={0}&line={1}'.format(id, envId), 	 	
+	  data: 'addr={0}&line={1}'.format(addr, envId), 	 	
 	  success: function(obj) {
 			updateValue(obj);			
 	  },
@@ -110,14 +111,14 @@ function getValues()
 
 function updateStatus()
 {
-	for(var i=0; i<=devNum; ++i) {
+	for(var i=0; i<=gRows; ++i) {
 		setTimeout( function(){getValues();}, (i+1)*45);//延迟5000毫米	
 	}
 }
 
 
 // 增加一行表格
-function addtr(id)
+function addtr(id, addr)
 {
 	 var tab=document.getElementById('tab');
 	 var tradd=tab.insertRow(id);
@@ -125,24 +126,25 @@ function addtr(id)
 	if (id%2) tradd.style.background = "#F5F5F5";
 	tradd.align="center";
 	
-	var fma = {id:id};	
+	var fma = {id:id,addr:addr};	
 	var html = '<td height="22px">{id}</td>' + 
-                '<td id="tem_{id}"> --- </td>' +
-                '<td> <input id="tem_min_{id}" type="number" style="width:50px"/> </td>' +
-                '<td> <input id="tem_max_{id}" type="number" style="width:50px"/> </td>' +
-                '<td id="hum_{id}"> --- </td>' +
-                '<td> <input id="hum_min_{id}" type="number" style="width:50px"/> </td>' +
-                '<td> <input id="hum_max_{id}" type="number" style="width:50px"/> </td>' +
-				'<td> <input type="button" value="提交" onClick="setSlave({id});"/> </td>'; 
+                '<td id="tem_{addr}"> --- </td>' +
+                '<td> <input id="tem_min_{addr}" type="number" style="width:50px"/> </td>' +
+                '<td> <input id="tem_max_{addr}" type="number" style="width:50px"/> </td>' +
+                '<td id="hum_{addr}"> --- </td>' +
+                '<td> <input id="hum_min_{addr}" type="number" style="width:50px"/> </td>' +
+                '<td> <input id="hum_max_{addr}" type="number" style="width:50px"/> </td>' +
+				'<td> <input type="button" value="提交" onClick="setSlave({addr});"/> </td>'; 
 	 tradd.innerHTML=html.format(fma);  		
 }
 
 // 创建表格
-function createTab(num)
+function createTab(obj)
 {
-	devNum = Number(num);
-	for(var i=1; i<=Number(num); ++i) {
-		addtr(i);
+	gRows = 0;
+	devNum = Number(obj.devNum);
+	for(var i=1; i<=devNum; ++i) {
+		addtr(++gRows, i);
 	}
 }
 
@@ -153,15 +155,13 @@ function getDevNum()
 	var options = { url: 'getDevNum', 
 	  data: 'num=0', 	
 	  success: function(obj) {
-			createTab(obj.num);			
+			createTab(obj);			
 	  },
 	  fail: function(err) {	
 	  }
 	};	
 	ajaxRequest(options);
 }
-
-
 
 
 // 网页加载时执行函数	
@@ -172,9 +172,11 @@ function pageload()
 	window.setInterval("updateStatus()",4250);
 
 	// 测试代码
-	// createTab(10);
-	// var arr = {id:5, tem:220,tem_alarm:0,tem_min:1,tem_max:2,hum:1, hum_alarm:1, hum_min:3,  hum_max:4};
-	// updateThreshold(arr); 
+	  <!-- var zz = {devNum:5, lineNum:3}; -->
+	<!-- createTab(zz);	 -->
+	<!-- var arr = {addr:5, tem:220,tem_alarm:0,tem_min:1,tem_max:2,hum:1, hum_alarm:1, hum_min:3,  hum_max:4}; -->
+	 <!-- updateThreshold(arr);  -->
+
 }
 
 function isRealNum(val){
@@ -189,14 +191,14 @@ function isRealNum(val){
     }
 }           
 
-function checkInput(id)
+function checkInput(addr)
 {	
-	var min = document.getElementById('tem_min_'+id).value;
+	var min = document.getElementById('tem_min_'+addr).value;
 	if (!isRealNum(min)) {
 		alert("温度最小值，输入有误!");	return false;
 	}
 
-	var max = document.getElementById('tem_max_'+id).value;
+	var max = document.getElementById('tem_max_'+addr).value;
 	if (!isRealNum(max)) {
 		alert("温度最大值，输入有误!");	return false;
 	}
@@ -205,12 +207,12 @@ function checkInput(id)
 		alert("温度最小值大于温度最大值，请重新输入!");	return false;
 	}
 
-	 min = document.getElementById('hum_min_'+id).value;
+	 min = document.getElementById('hum_min_'+addr).value;
 	if (!isRealNum(min)) {
 		alert("湿度最小值，输入有误!");	return false;
 	}
 
-	 max = document.getElementById('hum_max_'+id).value;
+	 max = document.getElementById('hum_max_'+addr).value;
 	if (!isRealNum(max)) {
 		alert("湿度最大值，输入有误!");	return false;
 	}
@@ -223,19 +225,19 @@ function checkInput(id)
 	return ret;
 }
 
-function setSlave(id)
+function setSlave(addr)
 {
-	var ret = checkInput(id);
+	var ret = checkInput(addr);
 	if(ret) {
-		var tem_min = document.getElementById('tem_min_'+id).value;
-		var tem_max = document.getElementById('tem_max_'+id).value;
-		var hum_min = document.getElementById('hum_min_'+id).value;
-		var hum_max = document.getElementById('hum_max_'+id).value;
+		var tem_min = document.getElementById('tem_min_'+addr).value;
+		var tem_max = document.getElementById('tem_max_'+addr).value;
+		var hum_min = document.getElementById('hum_min_'+addr).value;
+		var hum_max = document.getElementById('hum_max_'+addr).value;
 		
 		var options = { url: 'setEnvThreshold', 
-		  data: 'id={0}&tem_min={1}&tem_max={2}&hum_min={3}&hum_max={3}&line={4}'.format(id, tem_min, tem_max, hum_min, hum_max, envId), 	
+		  data: 'addr={0}&tem_min={1}&tem_max={2}&hum_min={3}&hum_max={3}&line={4}'.format(addr, tem_min, tem_max, hum_min, hum_max, envId), 	
 		  success: function(res) {
-			if(0 == res.id) {
+			if(0 == res.addr) {
 				location.reload();
 			}
 		  },

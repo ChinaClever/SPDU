@@ -9,7 +9,10 @@
 
 var devNum = 0; // 设备数量
 var lineNum = 0; // 相
-var devId = 1;
+
+var gId = 0;
+var gRows = 0;
+
 
 // 获取开关字符串
 function getSwStr(sw) 
@@ -29,51 +32,62 @@ function setAlarmColor(obj, alarm)
 
 
 // 以对像来设置数据 
-function setByObj(id, obj)
+function setByObj(addr, line, obj)
 {
 	var sw = Number(obj['sw'])
-	var e = document.getElementById('sw_'+id);
+	var e = document.getElementById('sw_'+addr+'_'+line);
 	e.innerHTML = getSwStr(sw);
 	setAlarmColor(e, sw);	
 	
-	e = document.getElementById('vol_'+id);
+	e = document.getElementById('vol_'+addr+'_'+line);
 	e.innerHTML = obj['vol'];
 	setAlarmColor(e, obj["vol_alarm"]);	
 	
-	e = document.getElementById('cur_'+id);
+	e = document.getElementById('cur_'+addr+'_'+line);
 	e.innerHTML = obj["cur"];
 	setAlarmColor(e, obj["cur_alarm"]);	
 
-	e = document.getElementById('pow_'+id);
+	e = document.getElementById('pow_'+addr+'_'+line);
 	e.innerHTML = obj["pow"];
 
-	e = document.getElementById('pf_'+id);
+	e = document.getElementById('pf_'+addr+'_'+line);
 	e.innerHTML = obj["pf"];
 
-	e = document.getElementById('ele_'+id);
+	e = document.getElementById('ele_'+addr+'_'+line);
 	e.innerHTML = obj["ele"];
+	
+	e = document.getElementById('addr_'+addr+'_'+line);
+	e.innerHTML = obj["addr"];
+	
+	e = document.getElementById('line_'+addr+'_'+line);
+	e.innerHTML = obj["line"];
 }
 
 
 // 更新开关状态
 function updateData(obj)
 {
-	var id = Number(obj.id);	
-	setByObj(id, obj);
+	var addr = Number(obj.addr);
+	var line = Number(obj.line);	
+	setByObj(addr, line, obj);
 }
 
 function getDevID()
 {
-	if(devId > devNum) 
-		devId = 1;
-	return devId++;
+	if(gId >= gRows) 
+		gId = 0;
+		
+	return gId++;
 }
 
 function getDevStatus()
 {
-	var id = getDevID();
+	var id = getDevID();	
+	var addr = 1+id/lineNum;
+	var line = id%lineNum;	
+	
 	var options = { url: 'getDevStatus', 
-	  data: 'id={0}&line={1}'.format(id, lineNum), 	 	
+	  data: 'addr={0}&line={1}'.format(addr, line), 	 	
 	  success: function(obj) {
 			updateData(obj);			
 	  },
@@ -83,8 +97,16 @@ function getDevStatus()
 	ajaxRequest(options);
 }
 
+function updateStatus()
+{
+	
+	for(var i=1; i<=gRows; ++i) {
+		setTimeout( function(){getDevStatus();}, (i+1)*45);//延迟5000毫米	
+	}
+}
+
 // 增加一行表格
-function addtr(id)
+function addtr(id, addr, line)
 {
 	 var tab=document.getElementById('tab');
 	 var tradd=tab.insertRow(id);
@@ -92,41 +114,42 @@ function addtr(id)
 	if (id%2) tradd.style.background = "#F5F5F5";
 	tradd.align="center";
 	
-	var fma = {id:id};	
-	var html = '<td height="22px">{id}</td>' +
-			'<td id="sw_{id}"> --- </td>' +
-			'<td id="vol_{id}"> --- </td>' +
-			'<td id="cur_{id}"> --- </td>' +
-			'<td id="pow_{id}"> --- </td>' +
-			'<td id="pf_{id}"> --- </td>' +
-			'<td id="ele_{id}"> --- </td>';
-	 tradd.innerHTML=html.format(fma);  		
+	var fma = {id:id,addr:addr,line:line};	
+	var html = '<td height="22px" id="id_{id}">{id}</td>' +
+			'<td id="addr_{addr}_{line}"> {addr} </td>' +
+			'<td id="line_{addr}_{line}"> {line} </td>' +
+			'<td id="sw_{addr}_{line}"> --- </td>' +
+			'<td id="vol_{addr}_{line}"> --- </td>' +
+			'<td id="cur_{addr}_{line}"> --- </td>' +
+			'<td id="pow_{addr}_{line}"> --- </td>' +
+			'<td id="pf_{addr}_{line}"> --- </td>' +
+			'<td id="ele_{addr}_{line}"> --- </td>';
+	 tradd.innerHTML=html.format(fma);  
 }
 
 
-function createTab(num)
+function createTab(obj)
 {
-	devNum = Number(num);
+	gRows = 0;
+	devNum = Number(obj.devNum);
+	lineNum = Number(obj.lineNum);	
 	for(var i=1; i<=devNum; ++i) {
-		addtr(i);
+		for(var j=0; j<lineNum; ++j) {
+			addtr(++gRows, i, j);
+		}
 	}	
 }
 
 
-function updateStatus()
-{
-	for(var i=1; i<=devNum; ++i) {
-		setTimeout( function(){getDevStatus();}, (i+1)*45);//延迟5000毫米	
-	}
-}
+
 
 // 获取输出位数量
 function getDevNum() 
 {
 	var options = { url: 'getDevNum', 
-	  data: 'num=0', 	
+	  data: 'devNum={0}&lineNum={1}'.format(devNum, lineNum), 	
 	  success: function(obj) {
-			createTab(obj.num);			
+			createTab(obj);			
 	  },
 	  fail: function(err) {	
 	  }
@@ -139,16 +162,18 @@ function getDevNum()
 // 网页加载时执行函数	
 function pageload() 
 {	
-	
+
 	getDevNum(); 
 	setTimeout(function(){updateStatus();}, 100);//延迟5000毫米	
 	window.setInterval("updateStatus()",4250);
-	
+
 /*
-	createTab(10);
-	var arr = {id:5, sw:1, vol:220,vol_alarm:0, cur:1 ,cur_alarm:1, pow:32, pf:0.22, ele:5.5};
-	updateData( arr); 
-*/
+	var zz = {devNum:5, lineNum:3};
+	createTab(zz);	
+	
+	var arr = {addr:5, line:1, sw:1, vol:220,vol_alarm:0, cur:1 ,cur_alarm:1, pow:32, pf:0.22, ele:5.5};
+	updateData(arr); 
+	*/
 }
 	
 </script>
@@ -159,6 +184,8 @@ function pageload()
     <table id="tab" width="700" style="font-size:12px;">
         <tr align="center" style="color:#FFFFFF;background:#0054A8;">
             <td height="22px">编号</td>
+            <td>地址</td>
+            <td>L\C</td>
             <td>开关</td>
 			<td>电压</td>
             <td>电流</td>

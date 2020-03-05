@@ -9,16 +9,16 @@
 void web_threshold_set(struct webnet_session* session)
 {
 	struct webnet_request* request = session->request;
-	const char *id_value = webnet_request_get_query(request, "id");
+	const char *addr_value = webnet_request_get_query(request, "addr");
 	const char *line_value = webnet_request_get_query(request, "line");
 	const char *vol_min = webnet_request_get_query(request, "vol_min");
 	const char *vol_max = webnet_request_get_query(request, "vol_max");
 	const char *cur_min = webnet_request_get_query(request, "cur_min");
 	const char *cur_max = webnet_request_get_query(request, "cur_max");
 
-	int id = atoi(id_value);
+	int addr = atoi(addr_value);
 	int line = atoi(line_value);
-	sObjData *t = &(data_packet_get(id)->data.line);
+	sObjData *t = &(data_packet_get(addr)->data.line);
 
 	int value = atoi(vol_min);
 	t->vol.min[line] = value;
@@ -32,8 +32,8 @@ void web_threshold_set(struct webnet_session* session)
 	value = atoi(cur_max);
 	t->cur.max[line] = value;
 
-	static const char* status = "id=%d&line=%d";
-	webnet_session_printf(session, status, id, line);
+	static const char* status = "addr=%d&line=%d";
+	webnet_session_printf(session, status, addr, line);
 }
 
 
@@ -41,16 +41,16 @@ void web_threshold_set(struct webnet_session* session)
 void web_threshold_get(struct webnet_session* session)
 {
 	struct webnet_request* request = session->request;
-	const char *id_str = webnet_request_get_query(request, "id");
+	const char *addr_str = webnet_request_get_query(request, "addr");
 	const char *line_str = webnet_request_get_query(request, "line");
 
 	char *ptr=pWebQuest;
-	int id = atoi(id_str);
+	int addr = atoi(addr_str);
 	int line = atoi(line_str);
-	sObjData *t = &(data_packet_get(id)->data.line);
+	sObjData *t = &(data_packet_get(addr)->data.line);
 
 	ptr[0] = 0;
-	sprintf(ptr, "id=%d", id); ptr += strlen(ptr);
+	sprintf(ptr, "addr=%d", addr); ptr += strlen(ptr);
 	sprintf(ptr, "&line=%d", line); ptr += strlen(ptr);
 	sprintf(ptr, "&vol=%d",t->vol.value[line]); ptr += strlen(ptr);
 	sprintf(ptr, "&vol_alarm=%d",t->vol.alarm[line]); ptr += strlen(ptr);
@@ -69,16 +69,16 @@ void web_threshold_get(struct webnet_session* session)
 void web_values_get(struct webnet_session* session)
 {
 	struct webnet_request* request = session->request;
-	const char *id_str = webnet_request_get_query(request, "id");
+	const char *addr_str = webnet_request_get_query(request, "addr");
 	const char *line_str = webnet_request_get_query(request, "line");
 
 	char *ptr=pWebQuest;
-	int id = atoi(id_str);
+	int addr = atoi(addr_str);
 	int line = atoi(line_str);
-	sObjData *t = &(data_packet_get(id)->data.line);
+	sObjData *t = &(data_packet_get(addr)->data.line);
 
 	ptr[0] = 0;
-	sprintf(ptr, "id=%d", id); ptr += strlen(ptr);
+	sprintf(ptr, "addr=%d", addr); ptr += strlen(ptr);
 	sprintf(ptr, "&line=%d", line); ptr += strlen(ptr);
 	sprintf(ptr, "&vol=%d",t->vol.value[line]); ptr += strlen(ptr);
 	sprintf(ptr, "&vol_alarm=%d",t->vol.alarm[line]); ptr += strlen(ptr);

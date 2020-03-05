@@ -9,16 +9,16 @@
 void web_env_setThreshold(struct webnet_session* session)
 {
 	struct webnet_request* request = session->request;
-	const char *id_value = webnet_request_get_query(request, "id");
+	const char *addr_value = webnet_request_get_query(request, "addr");
 	const char *line_value = webnet_request_get_query(request, "line");
 	const char *tem_min = webnet_request_get_query(request, "tem_min");
 	const char *tem_max = webnet_request_get_query(request, "tem_max");
 	const char *hum_min = webnet_request_get_query(request, "hum_min");
 	const char *hum_max = webnet_request_get_query(request, "hum_max");
 
-	int id = atoi(id_value);
+	int addr = atoi(addr_value);
 	int line = atoi(line_value);
-	sEnvData *t = &(data_packet_get(id)->data.env);
+	sEnvData *t = &(data_packet_get(addr)->data.env);
 
 	int value = atoi(tem_min);
 	t->tem.min[line] = value;
@@ -32,8 +32,8 @@ void web_env_setThreshold(struct webnet_session* session)
 	value = atoi(hum_max);
 	t->hum.max[line] = value;
 
-	static const char* status = "id=%d&line=%d";
-	webnet_session_printf(session, status, id, line);
+	static const char* status = "addr=%d&line=%d";
+	webnet_session_printf(session, status, addr, line);
 }
 
 
@@ -41,16 +41,16 @@ void web_env_setThreshold(struct webnet_session* session)
 void web_env_getThreshold(struct webnet_session* session)
 {
 	struct webnet_request* request = session->request;
-	const char *id_str = webnet_request_get_query(request, "id");
+	const char *addr_str = webnet_request_get_query(request, "addr");
 	const char *line_str = webnet_request_get_query(request, "line");
 
 	char *ptr=pWebQuest;
-	int id = atoi(id_str);
+	int addr = atoi(addr_str);
 	int line = atoi(line_str);
-	sEnvData *t = &(data_packet_get(id)->data.env);
+	sEnvData *t = &(data_packet_get(addr)->data.env);
 
 	ptr[0] = 0;
-	sprintf(ptr, "id=%d", id); ptr += strlen(ptr);
+	sprintf(ptr, "addr=%d", addr); ptr += strlen(ptr);
 	sprintf(ptr, "&line=%d", line); ptr += strlen(ptr);
 	sprintf(ptr, "&tem=%d",t->tem.value[line]); ptr += strlen(ptr);
 	sprintf(ptr, "&tem_alarm=%d",t->tem.alarm[line]); ptr += strlen(ptr);
@@ -69,16 +69,16 @@ void web_env_getThreshold(struct webnet_session* session)
 void web_env_values(struct webnet_session* session)
 {
 	struct webnet_request* request = session->request;
-	const char *id_str = webnet_request_get_query(request, "id");
+	const char *addr_str = webnet_request_get_query(request, "addr");
 	const char *line_str = webnet_request_get_query(request, "line");
 
 	char *ptr=pWebQuest;
-	int id = atoi(id_str);
+	int addr = atoi(addr_str);
 	int line = atoi(line_str);
-	sEnvData *t = &(data_packet_get(id)->data.env);
+	sEnvData *t = &(data_packet_get(addr)->data.env);
 
 	ptr[0] = 0;
-	sprintf(ptr, "id=%d", id); ptr += strlen(ptr);
+	sprintf(ptr, "addr=%d", addr); ptr += strlen(ptr);
 	sprintf(ptr, "&line=%d", line); ptr += strlen(ptr);
 	sprintf(ptr, "&tem=%d",t->tem.value[line]); ptr += strlen(ptr);
 	sprintf(ptr, "&tem_alarm=%d",t->tem.alarm[line]); ptr += strlen(ptr);

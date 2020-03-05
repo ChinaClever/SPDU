@@ -151,10 +151,7 @@ function setSlave()
 				<select id="sel" onchange="selOnchange(this.value)" style="width:170px;">
 					<option value=0>禁用模式</option>
 					<option value=1>UDP</option>
-					<option value=2>TCP Server</option>
-					<option value=3>TCP Client</option>
-					<option value=4>websocket</option>
-					<option value=5>http post</option>
+					<option value=2>websocket</option>
 				</select>
 			</td>
 		</tr>
@@ -189,10 +186,7 @@ function setSlave()
 	数据推送说明：<br />
 	设备数据推送提供，UDP，TCP Client、websocket、http post四种推送方式，数据都使用Json格式进行传递，其中：<br />
 	1、UDP推送：设备会定时往目的地发送数据，设备也会监听2707端口，当此端口收到合法的Json格式数据就会进行解析<br />
-	2、TCP Server：设备监听2708端口,连接成功后就会定时发送数据 <br />
-	3、TCP Client：设备会主动连接目标,连接成功后就会定时发送数据 <br />
 	4、websocket：同TCP类似，<br />
-	5、http post：同TCP类似，<br />
 	
 
 	<br />注意，在局域网中推介使用UDP，进行数据推送，网络连接出错时，设备会延时再次尝试连接主机 <br />
