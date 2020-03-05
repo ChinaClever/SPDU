@@ -32,10 +32,19 @@ function setAlarmColor(obj, alarm)
 
 
 // 以对像来设置数据 
-function setByObj(addr, line, obj)
+function setByObj(obj)
 {
+	var addr = Number(obj.addr);
+	var line = Number(obj.line);	
+	
+	var e = document.getElementById('addr_'+addr+'_'+line);
+	e.innerHTML = obj["addr"];
+	
+	e = document.getElementById('line_'+addr+'_'+line);
+	e.innerHTML = obj["line"];
+	
 	var sw = Number(obj['sw'])
-	var e = document.getElementById('sw_'+addr+'_'+line);
+	e = document.getElementById('sw_'+addr+'_'+line);
 	e.innerHTML = getSwStr(sw);
 	setAlarmColor(e, sw);	
 	
@@ -56,20 +65,13 @@ function setByObj(addr, line, obj)
 	e = document.getElementById('ele_'+addr+'_'+line);
 	e.innerHTML = obj["ele"];
 	
-	e = document.getElementById('addr_'+addr+'_'+line);
-	e.innerHTML = obj["addr"];
-	
-	e = document.getElementById('line_'+addr+'_'+line);
-	e.innerHTML = obj["line"];
 }
 
 
 // 更新开关状态
 function updateData(obj)
 {
-	var addr = Number(obj.addr);
-	var line = Number(obj.line);	
-	setByObj(addr, line, obj);
+	setByObj(obj);
 }
 
 function getDevID()
@@ -162,7 +164,6 @@ function getDevNum()
 // 网页加载时执行函数	
 function pageload() 
 {	
-
 	getDevNum(); 
 	setTimeout(function(){updateStatus();}, 100);//延迟5000毫米	
 	window.setInterval("updateStatus()",4250);
