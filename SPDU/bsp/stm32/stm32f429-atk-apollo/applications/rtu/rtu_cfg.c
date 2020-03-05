@@ -48,7 +48,7 @@ void rtu_cfg_init(sRtus *rtus)
 		rtu->id = i;
 		rtu_cfg_pin(rtu);
 		rtu->cmds = list_new();  // ³õÊ¼»¯Á´±í
-		sprintf(rtu->name, "uart%d", 2+i);
+		sprintf(rtu->name, "uart%d", 3+i);
 		rtu->start = i*rtus->portDevs+1;
 		rtu->end = (i+1)*rtus->portDevs;
 	}

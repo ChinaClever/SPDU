@@ -35,7 +35,7 @@ void web_dev_status(struct webnet_session* session)
 
 void web_dev_num(struct webnet_session* session)
 {
-	char num = 5, line=3;
+	char num = 3, line=3;
 	static const char* status = "devNum=%d&lineNum=%d";
 	webnet_session_printf(session, status, num, line);
 }
